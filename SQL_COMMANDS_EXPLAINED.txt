@@ -1,0 +1,569 @@
+HERITAGETRAILS - SQL COMMANDS EXPLAINED
+========================================
+
+This guide explains the SQL used by this project. The database is MySQL,
+the database name is HeritageWalks, and the scripts are schema.sql and
+seed.sql. The Node.js API also runs the SELECT, CALL, and INSERT statements
+explained in the API section.
+
+
+1. SQL COMMAND CATEGORIES
+-------------------------
+
+DDL means Data Definition Language. It defines database structures:
+CREATE DATABASE, CREATE TABLE, ALTER TABLE, CREATE PROCEDURE, and
+CREATE TRIGGER.
+
+DML means Data Manipulation Language. It reads or changes table data:
+SELECT, INSERT, UPDATE, and DELETE.
+
+DCL/TCL are other SQL categories. This project's scripts do not define
+database users or use transaction commands such as COMMIT and ROLLBACK.
+The trigger signals errors to MySQL with SIGNAL SQLSTATE.
+
+
+2. DATABASE COMMANDS
+--------------------
+
+CREATE DATABASE IF NOT EXISTS HeritageWalks;
+
+Creates the HeritageWalks database if it does not already exist. IF NOT
+EXISTS makes rerunning this command safe if the database is already there.
+It does not erase existing data.
+
+USE HeritageWalks;
+
+Selects HeritageWalks as the default database for later statements in the
+current MySQL connection. The seed script also runs USE before inserting
+its data.
+
+
+3. TABLES, COLUMNS, AND CONSTRAINTS
+----------------------------------
+
+CREATE TABLE IF NOT EXISTS TableName (...);
+
+Creates a table and its columns, keys, defaults, and constraints. IF NOT
+EXISTS avoids an error when the table already exists. It does not update
+an existing table's definition.
+
+The seven project tables are:
+
+Cities
+  CityID                 Primary key and automatically generated ID
+  Name, State            City identity
+  HistoricalSignificance Optional longer description
+  IsActive               Soft-delete/visibility flag
+
+Landmarks
+  LandmarkID             Primary key and automatically generated ID
+  CityID                 Foreign key to Cities.CityID
+  Name, Description      Landmark information
+  EntryFee               Entry fee, defaults to 0.00
+  IsActive               Soft-delete/visibility flag
+
+Itineraries
+  ItineraryID            Primary key and automatically generated ID
+  Title                  Tour name
+  BasePrice              Base price per person
+  DurationHours          Estimated tour duration
+  IsActive               Soft-delete/visibility flag
+
+Itinerary_Stops
+  StopID                 Primary key and automatically generated ID
+  ItineraryID            Foreign key to Itineraries.ItineraryID
+  LandmarkID             Foreign key to Landmarks.LandmarkID
+  StopOrder              Position of this landmark in the route
+  IsActive               Soft-delete/visibility flag
+
+Itinerary_Stops is a bridge table: one itinerary can contain many
+landmarks, and one landmark can appear in multiple itineraries.
+
+TourModes
+  TourModeID             Primary key and automatically generated ID
+  ModeCode               Unique stable code such as WALK or SELF_DRIVE
+  ModeName               Visitor-facing travel-mode name
+  CapacityUnit           PEOPLE or VEHICLES
+  Description            Explains the mode and its capacity meaning
+  IsActive               Allows a mode to be deactivated
+
+Itinerary_Modes
+  ItineraryID            Foreign key to Itineraries.ItineraryID
+  TourModeID             Foreign key to TourModes.TourModeID
+  CapacityLimit          Capacity for this specific route/mode option
+  IsActive               Deactivates an option without deleting the row
+
+Itinerary_Modes is a composite-key bridge table. A route may offer several
+travel modes, and each mode may be offered on many routes. CapacityLimit
+belongs to the route/mode combination, not to the general itinerary.
+
+Bookings
+  BookingID              Primary key and automatically generated ID
+  CustomerName, Email    Person who made the booking
+  ItineraryID            Foreign key to Itineraries.ItineraryID
+  TourModeID             Selects the offered mode for the itinerary
+  TravelDate             Date of the tour
+  GroupSize              Number of people; defaults to 1
+  VehicleCount           Cars in a self-drive booking; defaults to 0
+  BookingDate            Timestamp; defaults to the current time
+  FinalPrice             Total price saved at booking time
+  PaymentStatus          Defaults to 'Pending'
+  IsActive               Soft-delete/visibility flag
+
+Column types used:
+  INT                    Whole-number identifiers, duration, capacity, etc.
+  VARCHAR(n)             Text with a maximum length
+  TEXT                   Longer text
+  DECIMAL(10,2)          Exact decimal amount with two fractional digits
+  DATE                   Calendar date
+  TIMESTAMP              Date and time
+  BOOLEAN                True/false flag (represented as 1/0 in MySQL)
+
+Column rules and constraints:
+  PRIMARY KEY             Uniquely identifies each row; also cannot be NULL.
+  AUTO_INCREMENT          MySQL assigns the next identifier automatically.
+  FOREIGN KEY (...)       Requires a non-NULL reference to match a row in
+                          the referenced table.
+  NOT NULL                Requires a value for the column.
+  DEFAULT value           Supplies a value when an INSERT omits the column.
+
+Some foreign-key columns are nullable, while Bookings.ItineraryID,
+Bookings.TourModeID, and both Itinerary_Modes key columns are required.
+Whenever a foreign-key value is non-NULL, it must refer to an existing
+parent row.
+
+Bookings also has a composite foreign key (ItineraryID, TourModeID) to
+Itinerary_Modes. It guarantees that a booking selects a mode actually
+offered for that itinerary.
+
+IsActive is used for soft deletion: setting it to FALSE hides/deactivates a
+record without physically removing its historical row. Queries must check
+IsActive when they should show only active data.
+
+
+4. SAFE SCHEMA MIGRATIONS
+-------------------------
+
+The schema checks INFORMATION_SCHEMA before applying changes to older
+databases. This allows the current schema to upgrade the earlier project
+version while retaining existing routes and bookings.
+
+SET @group_size_column_exists = (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'Bookings'
+      AND COLUMN_NAME = 'GroupSize'
+);
+
+SET assigns a value to a MySQL session variable. The @ prefix denotes a
+session variable. INFORMATION_SCHEMA.COLUMNS is MySQL metadata describing
+table columns. DATABASE() returns the currently selected database.
+COUNT(*) counts the metadata rows matching the conditions. The result is
+the number of GroupSize columns in the current database's Bookings table.
+
+SET @group_size_migration = IF(
+    @group_size_column_exists = 0,
+    'ALTER TABLE Bookings ADD COLUMN GroupSize INT NOT NULL DEFAULT 1 AFTER TravelDate',
+    'SELECT 1'
+);
+
+IF(condition, value_if_true, value_if_false) is a MySQL expression. If the
+column is missing, it stores an ALTER TABLE command as text. Otherwise it
+stores SELECT 1, a harmless statement that returns the number 1.
+
+ALTER TABLE Bookings ADD COLUMN ...
+
+Changes an existing table definition. This migration adds GroupSize as a
+required integer with default 1, immediately after TravelDate. Existing
+booking rows therefore receive a group size of one.
+
+PREPARE group_size_migration_statement FROM @group_size_migration;
+EXECUTE group_size_migration_statement;
+DEALLOCATE PREPARE group_size_migration_statement;
+
+PREPARE compiles a SQL string into a prepared statement. EXECUTE runs it.
+DEALLOCATE releases the prepared statement. This lets the script
+conditionally execute ALTER TABLE, which is DDL and cannot be selected by
+a normal IF statement block in this top-level script.
+
+This migration handles the specific older schema without GroupSize. It
+does not attempt to modify every possible difference in an older database.
+
+The same information-schema and prepared-statement pattern adds the
+VehicleCount and TourModeID columns only if they are missing.
+
+The old schema stored one MaxCapacity value on Itineraries. The updated
+schema moves that value to Itinerary_Modes for the Walking option. A
+conditional INSERT ... SELECT copies each old value into the new table,
+then ALTER TABLE drops the obsolete Itineraries.MaxCapacity column.
+
+Existing bookings are assigned the Walking TourModeID before the column
+becomes NOT NULL. A composite foreign key then links each
+(ItineraryID, TourModeID) booking to a mode actually offered by that
+itinerary. Existing GroupSize values remain; VehicleCount defaults to 0.
+
+Run schema.sql before seed.sql. The migration creates the mode lookup
+values and preserves existing walking capacity and booking history. The
+seed script then adds example car and bus capacities.
+
+
+5. STORED PROCEDURE
+-------------------
+
+DELIMITER //
+
+Changes the MySQL command-line client's statement terminator from a
+semicolon to //. This allows semicolons inside the procedure and trigger
+bodies without ending the entire CREATE statement early. DELIMITER is a
+client command, not part of SQL sent to the server.
+
+DROP PROCEDURE IF EXISTS GetItineraryDetails //
+
+Removes the old procedure if it exists. IF EXISTS avoids an error on the
+first run. It is followed by CREATE so the current procedure definition
+replaces the old one.
+
+CREATE PROCEDURE GetItineraryDetails(IN p_ItineraryID INT)
+BEGIN
+    ...
+END //
+
+Creates a reusable stored program in MySQL. IN means p_ItineraryID is an
+input parameter. The procedure returns the stops for the requested tour.
+
+SELECT ... FROM ... JOIN ... WHERE ... ORDER BY ...;
+
+SELECT reads rows. FROM chooses the starting table. JOIN combines related
+rows where their join condition matches.
+
+This procedure joins:
+  Itineraries i            i is a short table alias for Itineraries
+  Itinerary_Stops ist      ist is an alias for Itinerary_Stops
+  Landmarks l               l is an alias for Landmarks
+  Cities c                  c is an alias for Cities
+
+The ON clauses match primary and foreign keys:
+  i.ItineraryID = ist.ItineraryID
+  ist.LandmarkID = l.LandmarkID
+  l.CityID = c.CityID
+
+An alias such as l.Name AS LandmarkName renames a result column. It does
+not rename the stored column or modify any data.
+
+WHERE filters the result to the requested itinerary and active rows:
+  i.ItineraryID = p_ItineraryID filters by the procedure input.
+  IsActive = TRUE excludes records marked inactive.
+
+ORDER BY ist.StopOrder ASC sorts stops in ascending route order. ASC means
+smallest to largest; it is the default sort direction.
+
+DROP PROCEDURE does not delete itinerary or landmark table data. It removes
+only the stored procedure definition.
+
+
+6. DATA-INTEGRITY TRIGGERS
+--------------------------
+
+DROP TRIGGER IF EXISTS TriggerName //
+CREATE TRIGGER TriggerName
+BEFORE INSERT ON TableName
+FOR EACH ROW
+BEGIN
+    ...
+END //
+
+A trigger is a stored rule that MySQL automatically runs when a matching
+table event occurs. BEFORE INSERT means it runs before each inserted row.
+FOR EACH ROW means the trigger checks every row in the insert.
+
+PreventDuplicateLandmark
+  Runs before a row is inserted into Itinerary_Stops.
+
+  DECLARE duplicate_count INT;
+  Declares a local integer variable for the trigger.
+
+  SELECT COUNT(*) INTO duplicate_count
+  FROM Itinerary_Stops
+  WHERE ItineraryID = NEW.ItineraryID
+    AND LandmarkID = NEW.LandmarkID;
+
+  INTO stores the SELECT result in the local variable. NEW refers to the
+  row currently being inserted. The WHERE clause searches for the same
+  itinerary/landmark pair.
+
+  IF duplicate_count > 0 THEN ...
+  IF runs the statements inside THEN when a duplicate already exists.
+
+  SIGNAL SQLSTATE '45000'
+  SET MESSAGE_TEXT = '...';
+
+  SIGNAL raises a user-defined database error. SQLSTATE 45000 is the
+  standard code for an unhandled user-defined exception. MESSAGE_TEXT is
+  the explanation returned with the error. The insert is rejected.
+
+CheckCapacityConstraint
+  Runs before a row is inserted into Bookings.
+
+  IF NEW.GroupSize < 1 THEN SIGNAL ...
+  Rejects zero or negative group sizes.
+
+  SELECT im.CapacityLimit, tm.CapacityUnit
+  INTO v_capacity_limit, v_capacity_unit
+  FROM Itinerary_Modes AS im
+  JOIN Itineraries AS i ON i.ItineraryID = im.ItineraryID
+  JOIN TourModes AS tm ON tm.TourModeID = im.TourModeID
+  WHERE im.ItineraryID = NEW.ItineraryID
+    AND im.TourModeID = NEW.TourModeID
+    AND i.IsActive = TRUE
+    AND tm.IsActive = TRUE;
+
+  Looks up the capacity limit and unit for the selected itinerary/mode.
+  This ensures the route and travel option are active.
+
+  IF v_capacity_limit IS NULL OR v_capacity_unit IS NULL THEN SIGNAL ...
+  Rejects an unavailable or inactive itinerary/mode choice.
+
+  IF v_capacity_unit = 'VEHICLES' THEN ...
+  For self-drive options, the trigger requires at least one car and no more
+  cars than people in the booking. It sets v_new_usage to NEW.VehicleCount
+  and calculates current usage with SUM(VehicleCount).
+
+  Otherwise it requires VehicleCount to be zero, sets v_new_usage to
+  NEW.GroupSize, and calculates current usage with SUM(GroupSize).
+
+  Both totals are filtered by itinerary, TourModeID, TravelDate, and active
+  bookings. COALESCE(SUM(...), 0) makes the result zero when no bookings
+  exist. Thus walking and bus options count people/seats; self-drive counts
+  vehicle slots.
+
+  IF v_current_usage + v_new_usage > v_capacity_limit THEN SIGNAL ...
+  Rejects a booking that exceeds the capacity for that specific date and
+  travel mode. The API returns trigger capacity errors as HTTP 409.
+
+DELIMITER ;
+
+Restores the default semicolon terminator after the stored programs have
+been created.
+
+Important scope note: these triggers are defined for INSERT events. They
+do not independently check updates to existing stops or bookings.
+
+
+7. SEED DATA COMMANDS
+---------------------
+
+INSERT INTO TableName (columns...)
+VALUES (...), (...);
+
+Adds one or more rows to a table. Listing columns makes it clear which
+value belongs to which field. Multiple parenthesized value groups insert
+multiple rows in one statement.
+
+The seed inserts records in dependency order:
+  1. Cities
+  2. Landmarks that reference the city
+  3. Itineraries
+  4. TourModes (the schema adds these lookup values)
+  5. Itinerary_Modes that reference itineraries and modes
+  6. Itinerary_Stops that reference itineraries and landmarks
+  7. Bookings that reference an itinerary/mode pair
+
+The foreign keys mean parent rows need to exist before child rows that
+reference them are inserted.
+
+TRUE and FALSE are boolean values. DECIMAL values such as 500.00 represent
+money. Text values use single quotes. To include a quote inside a SQL
+string, double it: 'city''s history'.
+
+ON DUPLICATE KEY UPDATE column = VALUES(column);
+
+If an inserted row conflicts with an existing primary or unique key,
+MySQL updates the named columns instead of failing. This is used to make
+the city, landmark, itinerary, and sample-booking seed inserts rerunnable.
+VALUES(column) refers to the value supplied for that column in the
+INSERT. This syntax may be deprecated in newer MySQL versions; the
+project's current script uses it.
+
+DELETE FROM Itinerary_Stops WHERE ItineraryID IN (1, 2, 3, 4);
+
+DELETE removes matching rows from a table. The WHERE clause is important:
+it limits deletion to stops belonging to the four demo routes. IN checks
+whether ItineraryID equals any value in the listed set. The seed then
+re-inserts the demo stops in their intended order.
+
+Unlike the IsActive soft-delete approach, this DELETE physically removes
+the selected stop rows. It is deliberately used here to refresh demo route
+stops when the seed script is run again.
+
+GroupSize and VehicleCount are omitted from the sample Bookings INSERT, so
+the schema defaults them to one person and zero cars. The seed looks up the
+walking TourModeID by its stable ModeCode rather than assuming an
+auto-generated numeric ID.
+
+
+8. SQL RUN BY THE NODE.JS API
+-----------------------------
+
+The API uses parameterized SQL with question-mark placeholders. The
+mysql2 library sends the values separately from the SQL text, which avoids
+building SQL by concatenating user input.
+
+List active itineraries:
+
+  SELECT i.ItineraryID, i.Title, i.BasePrice, i.DurationHours,
+         tm.TourModeID, tm.ModeCode, tm.ModeName, tm.CapacityUnit,
+         im.CapacityLimit
+  FROM Itineraries AS i
+  JOIN Itinerary_Modes AS im ON im.ItineraryID = i.ItineraryID
+  JOIN TourModes AS tm ON tm.TourModeID = im.TourModeID
+  WHERE i.IsActive = TRUE
+    AND im.IsActive = TRUE
+    AND tm.IsActive = TRUE
+  ORDER BY i.Title, tm.TourModeID;
+
+Returns the active routes and each available travel mode/capacity. The API
+groups repeated itinerary rows into one itinerary object with a Modes array.
+
+Read a route:
+
+  CALL GetItineraryDetails(?);
+
+CALL executes the stored procedure. The ? is bound to the itinerary ID
+provided by the API.
+
+Find bookings:
+
+  SELECT b.BookingID, i.Title AS ItineraryTitle, tm.ModeName AS TourMode,
+         b.TravelDate, b.GroupSize, b.VehicleCount,
+         b.FinalPrice, b.PaymentStatus, b.BookingDate
+  FROM Bookings AS b
+  JOIN Itineraries AS i ON i.ItineraryID = b.ItineraryID
+  JOIN TourModes AS tm ON tm.TourModeID = b.TourModeID
+  WHERE b.CustomerEmail = ? AND b.IsActive = TRUE
+  ORDER BY b.TravelDate DESC, b.BookingDate DESC;
+
+The JOIN adds the itinerary title to each matching booking. The ? is bound
+to the email address. DESC sorts from newest/largest to oldest/smallest,
+so upcoming/latest travel dates are returned first.
+
+Calculate a booking price:
+
+  SELECT i.BasePrice + COALESCE(SUM(
+      CASE
+        WHEN s.IsActive = TRUE AND l.IsActive = TRUE AND c.IsActive = TRUE
+        THEN l.EntryFee
+        ELSE 0
+      END
+    ), 0) AS FinalPrice,
+    im.CapacityLimit,
+    tm.CapacityUnit,
+    tm.ModeName
+  FROM Itineraries AS i
+  JOIN Itinerary_Modes AS im
+    ON im.ItineraryID = i.ItineraryID
+   AND im.TourModeID = ?
+   AND im.IsActive = TRUE
+  JOIN TourModes AS tm
+    ON tm.TourModeID = im.TourModeID AND tm.IsActive = TRUE
+  LEFT JOIN Itinerary_Stops AS s ON s.ItineraryID = i.ItineraryID
+  LEFT JOIN Landmarks AS l ON l.LandmarkID = s.LandmarkID
+  LEFT JOIN Cities AS c ON c.CityID = l.CityID
+  WHERE i.ItineraryID = ? AND i.IsActive = TRUE
+  GROUP BY i.ItineraryID, i.BasePrice, im.CapacityLimit,
+           tm.CapacityUnit, tm.ModeName;
+
+LEFT JOIN keeps the itinerary in the result even if it has no matching
+stop/landmark/city row. CASE WHEN ... THEN ... ELSE ... END includes an
+entry fee only when its stop, landmark, and city are active. SUM totals
+those fees, and COALESCE makes the total zero if no fee rows exist.
+BasePrice is added to the fee total. AS FinalPrice is a result alias.
+GROUP BY returns one aggregate result for the selected itinerary/mode.
+CapacityLimit and CapacityUnit are returned for validation. The API
+multiplies the per-person price by GroupSize before inserting the booking.
+
+Insert a booking:
+
+  INSERT INTO Bookings
+      (CustomerName, CustomerEmail, ItineraryID, TourModeID, TravelDate,
+       GroupSize, VehicleCount, FinalPrice)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+Adds a booking using bound values. BookingID, BookingDate, PaymentStatus,
+and IsActive are omitted so their defaults apply. The BEFORE INSERT
+capacity trigger automatically counts people or vehicles according to the
+selected TourModes.CapacityUnit.
+
+
+9. PRACTICE QUERIES FOR A DBMS DEMONSTRATION
+--------------------------------------------
+
+List active itineraries and offered travel modes:
+
+  SELECT i.Title, tm.ModeName, tm.CapacityUnit, im.CapacityLimit
+  FROM Itineraries AS i
+  JOIN Itinerary_Modes AS im ON im.ItineraryID = i.ItineraryID
+  JOIN TourModes AS tm ON tm.TourModeID = im.TourModeID
+  WHERE i.IsActive = TRUE
+    AND im.IsActive = TRUE
+    AND tm.IsActive = TRUE
+  ORDER BY i.Title, tm.TourModeID;
+
+Show every stop of every active route:
+
+  SELECT i.Title, ist.StopOrder, l.Name AS Landmark, c.Name AS City
+  FROM Itineraries AS i
+  JOIN Itinerary_Stops AS ist ON ist.ItineraryID = i.ItineraryID
+  JOIN Landmarks AS l ON l.LandmarkID = ist.LandmarkID
+  JOIN Cities AS c ON c.CityID = l.CityID
+  WHERE i.IsActive = TRUE
+    AND ist.IsActive = TRUE
+    AND l.IsActive = TRUE
+    AND c.IsActive = TRUE
+  ORDER BY i.Title, ist.StopOrder;
+
+Show bookings and the associated tour mode:
+
+  SELECT b.BookingID, b.CustomerName, i.Title, tm.ModeName,
+         b.TravelDate, b.GroupSize, b.VehicleCount,
+         b.FinalPrice, b.PaymentStatus
+  FROM Bookings AS b
+  JOIN Itineraries AS i ON i.ItineraryID = b.ItineraryID
+  JOIN TourModes AS tm ON tm.TourModeID = b.TourModeID
+  WHERE b.IsActive = TRUE
+  ORDER BY b.TravelDate;
+
+Count active bookings/people per itinerary, mode, and date:
+
+  SELECT ItineraryID, TourModeID, TravelDate,
+         COUNT(*) AS BookingCount, SUM(GroupSize) AS PeopleBooked,
+         SUM(VehicleCount) AS CarsBooked
+  FROM Bookings
+  WHERE IsActive = TRUE
+  GROUP BY ItineraryID, TourModeID, TravelDate;
+
+COUNT(*) counts booking rows. SUM(GroupSize) counts people, and
+SUM(VehicleCount) counts cars. GROUP BY separates each route/mode/date.
+
+Call the route procedure for itinerary 1:
+
+  CALL GetItineraryDetails(1);
+
+Try inserting a duplicate landmark into a route to observe the
+PreventDuplicateLandmark trigger. Try inserting a booking whose GroupSize
+(for walking/bus) or VehicleCount (for self-drive) exceeds remaining
+capacity to observe CheckCapacityConstraint.
+
+
+10. VIVA SUMMARY
+----------------
+
+"I use CREATE DATABASE and CREATE TABLE to define the schema. Primary and
+foreign keys preserve relationships. Itinerary_Stops stores the ordered
+landmark sequence. TourModes and Itinerary_Modes normalize travel choices
+and their capacity units for each itinerary. Bookings stores the selected
+mode, group size, and car count when applicable. GetItineraryDetails
+returns active stops in order. The triggers reject duplicate landmarks and
+enforce capacity by people/seats or vehicle slots. The project demonstrates
+walking, self-drive car, and tourist-bus options using Mangaluru sample
+data; it does not dispatch vehicles or arrange rentals."

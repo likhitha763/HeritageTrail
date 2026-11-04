@@ -1,0 +1,21 @@
+{
+  "name": "heritagetrails-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HeritageTrails REST API for the DBMS mini-project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "concurrently --kill-others --names API,WEB \"npm start\" \"npm --prefix frontend run dev\"",
+    "check": "node --check index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.14.0"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}

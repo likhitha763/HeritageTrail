@@ -1,18 +1,20 @@
-<<<<<<< HEAD
-# HeritageTrails — Multi-City Heritage-Walk Tour Planner 🏛️🚶‍♂️
+# HeritageTrails — Multi-City Heritage Tour Planner
 
-HeritageTrails is a database system designed to curate multi-stop cultural and historical walking itineraries across regional tourist destinations (e.g., heritage circuits near Mangaluru Junction). It efficiently manages landmarks, tour guides, audio resources, and custom visitor bookings to optimize the cultural tourism experience.
+HeritageTrails is a database-backed planner for multi-stop cultural and historical tours. Visitors can choose walking, self-drive car, or tourist-bus options for the same heritage itinerary. Mangaluru is the current sample city, and the relational schema supports adding more cities.
 
 ## 📌 Project Overview
-A robust database system designed to curate multi-stop cultural and historical walking itineraries across regional tourist destinations (e.g., heritage circuits near Mangaluru Junction [MAJN]). The system efficiently manages landmarks, sequential tour stops, and custom visitor bookings to optimize the cultural tourism experience while maintaining strict data integrity.
+The project manages cities, landmarks, sequential stops, transport modes, mode-specific capacities, and visitor bookings while maintaining database-level integrity.
 
-This project was developed to demonstrate core Database Management System (DBMS) concepts, including Entity-Relationship mapping, strict normalization (1NF to 3NF), and the practical application of Stored Procedures and Triggers.
+This DBMS mini-project demonstrates relational modeling, normalization, stored procedures, triggers, foreign keys, migrations, and SQL queries through a practical tourism application.
 
 ## ✨ Key Features
-* **Dynamic Itinerary Management:** Curate structured walking tours by linking multiple cultural landmarks sequentially.
-* **Concurrency & Capacity Control:** Prevents overbooking of itineraries through automated capacity constraints.
+* **Multi-mode itineraries:** Offer walking, self-drive car, and tourist-bus options for a route.
+* **Ordered stops:** Link itineraries to landmarks through a bridge table and display them in sequence.
+* **Mode-specific capacity:** Count walking groups and bus seats as people; count self-drive capacity as vehicle slots.
+* **Booking and price integrity:** Store the selected mode and lock in the final booking price.
 * **Historical Data Preservation:** Utilizes "Soft Deletes" (`IsActive` flags) to ensure that when a landmark closes or an itinerary is retired, past booking records remain intact.
-* **Financial Integrity:** Locks in the `FinalPrice` at the time of booking to protect historical transaction records against future landmark entry fee fluctuations.
+
+Transport options describe how visitors can explore the itinerary; the app does not rent cars, dispatch vehicles, or sell fuel/transport services. Self-drive visitors arrange their own cars. The bus option tracks passenger-seat capacity, but does not manage a bus operator or vehicle fleet. Visitors choose one mode for the whole itinerary. Combining modes between individual landmarks is not currently modeled.
 
 ## 🛠️ Technology Stack
 * **Database:** MySQL 
@@ -37,30 +39,32 @@ Itinerary cards use a pointer-following spotlight inspired by React Bits' [Spotl
 ## 🗄️ Database Architecture
 The relational database is normalized up to the **Third Normal Form (3NF)** to eliminate data redundancy and ensure data integrity. 
 
-### Core Entities (5 Tables)
+### Core Entities (7 Tables)
 1. **Cities:** Regional hubs hosting cultural sites.
 2. **Landmarks:** Specific heritage points of interest, linked to cities.
-3. **Itineraries:** Curated walking tours featuring a base price, duration, and maximum capacity.
+3. **Itineraries:** Curated tours featuring a base price and duration.
 4. **Itinerary_Stops (Bridge Table):** Maps the many-to-many relationship between Itineraries and Landmarks, defining the sequential `StopOrder`.
-5. **Bookings:** Tracks customer reservations, travel dates, payment statuses, and locked-in pricing.
+5. **TourModes:** Lookup table for walking, self-drive car, and tourist-bus options, including each mode's capacity unit.
+6. **Itinerary_Modes (Bridge Table):** Associates routes with available modes and stores capacity for each route/mode combination.
+7. **Bookings:** Tracks customer reservations, travel dates, selected tour modes, group/car counts, payment statuses, and locked-in prices.
 
 ## ⚙️ Advanced DBMS Components
 
 ### 1. Stored Procedure: `GetItineraryDetails`
-A custom procedure that performs a multi-table join (`Itineraries`, `Itinerary_Stops`, `Landmarks`, `Cities`) to retrieve a fully sequenced timeline of a specific walking tour. This allows the frontend to easily render a vertical timeline UI for the user.
+A custom procedure that joins `Itineraries`, `Itinerary_Stops`, `Landmarks`, and `Cities` to retrieve a fully sequenced tour timeline.
 
 ### 2. Triggers for Data Integrity
 * **`PreventDuplicateLandmark`:** A `BEFORE INSERT` trigger on the `Itinerary_Stops` table that aborts the transaction if an admin attempts to add the exact same landmark twice to a single itinerary.
-* **`CheckCapacityConstraint`:** A trigger on the `Bookings` table that verifies the `MaxCapacity` of an itinerary for a specific date before allowing a new booking to be inserted.
+* **`CheckCapacityConstraint`:** A trigger on the `Bookings` table that checks the selected itinerary/mode capacity for a travel date. It counts people for walking and bus options, and vehicle slots for self-drive car options.
 
 ## 🚀 Setup & Installation (Local Development)
 
 ### 1. Set up the database
 
 1. Open `schema.sql` in MySQL Workbench and execute it.
-2. Open `seed.sql` and execute it after the schema succeeds. This loads four sample walks and their Mangaluru stops.
+2. Open `seed.sql` and execute it after the schema succeeds. This loads four sample tours, their Mangaluru stops, and walking/car/bus capacities.
 
-Both scripts can be run again: the schema recreates the procedure and triggers, while the seed refreshes the four sample routes and sample records. The seed clears and rebuilds stops only for demo itinerary IDs `1` through `4`.
+Both scripts can be run again: the schema recreates the procedure and triggers, while the seed refreshes the four sample routes, mode capacities, and sample bookings. The seed clears and rebuilds stops only for demo itinerary IDs `1` through `4`.
 
 ### 2. Configure and start the application
 
@@ -90,30 +94,34 @@ The API listens on `http://localhost:3001` by default and Vite usually serves th
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| `GET` | `/api/itineraries` | List active itineraries |
+| `GET` | `/api/itineraries` | List active itineraries, offered modes, and per-mode capacities |
 | `GET` | `/api/itineraries/:id` | Get the active stop timeline from `GetItineraryDetails` |
 | `GET` | `/api/bookings?email=...` | Find active bookings associated with an email address |
 | `POST` | `/api/bookings` | Create a group booking and lock in the per-person price plus active landmark entry fees |
 
 Example booking request:
 
+Use the `TourModeID` from that itinerary's `Modes` array in the `GET /api/itineraries` response.
+
 ```json
 {
   "customerName": "Asha Rao",
   "customerEmail": "asha@example.com",
   "itineraryId": 1,
+  "tourModeId": 1,
   "travelDate": "2026-11-15",
-  "groupSize": 3
+  "groupSize": 3,
+  "vehicleCount": 0
 }
 ```
 
-`GroupSize` stores the number of people in a booking. The capacity trigger adds group sizes for the itinerary and date before accepting another booking. `FinalPrice` is the per-person base price plus current active landmark entry fees, multiplied by the number of people. Successful bookings default to `Pending`; capacity errors are returned as HTTP `409 Conflict`.
+`tourModeId` must match one of the selected itinerary's mode IDs returned by `GET /api/itineraries`. `GroupSize` stores the number of people. For walking and bus options, capacity is counted in people/seats and `vehicleCount` must be zero. For self-drive cars, visitors arrange their own cars and provide a `vehicleCount`; capacity is counted in vehicle slots, and the number of cars cannot exceed the group size. The app does not manage car rental, bus operators, fuel, or vehicle dispatch. `FinalPrice` is the per-person base price plus active landmark entry fees, multiplied by group size. Successful bookings default to `Pending`; capacity errors are returned as HTTP `409 Conflict`.
 
 Use **My bookings** in the header or footer to look up reservations by the email used while booking. The booking confirmation also links to the lookup page. This is a classroom demo without account sign-in or email verification, so anyone who knows an email address can look up bookings associated with it; add authentication or email verification before production use.
 
-The frontend includes Home, Explore Walks, Walk Details, My bookings, and Our Story pages. Each detail page displays the full ordered stop timeline and a group booking form. The Vite development server proxies `/api` requests to the backend on port `3001`.
+The frontend includes Home, Explore Tours, Tour Details, My bookings, and Project & DBMS pages. Each detail page displays the full ordered stop timeline and lets visitors choose a supported travel mode before booking. The Vite development server proxies `/api` requests to the backend on port `3001`.
 
-If you already created the database using an older version of `schema.sql`, run the updated `schema.sql` again. It adds `Bookings.GroupSize` to existing databases with a default of one person and recreates the capacity trigger.
+If you already created the database using an older version of `schema.sql`, run the updated `schema.sql` again. It preserves existing data, migrates each itinerary's former `MaxCapacity` to its walking-mode capacity, assigns existing bookings to the walking mode, adds vehicle/mode booking fields, and removes the obsolete itinerary-wide capacity column. Then rerun `seed.sql` to add car and bus options and refresh the demo data.
 
 ## Manual verification
 
@@ -147,29 +155,38 @@ VALUES (1, 1, 6);
 
 ### Capacity trigger
 
-The seed has itinerary `1` with capacity `20`. The following test runs in a transaction and does not permanently add test rows. Start the transaction and insert the temporary itinerary and its first booking, then run the second booking as a separate statement; it should fail because the capacity is `1`. Finish by rolling back the transaction.
+The following test runs in a transaction and does not permanently add test rows. It creates a temporary itinerary with a walking capacity of one person, inserts its first booking, then attempts a second booking; the trigger should reject the second insert. Run the second booking as a separate statement and finish by rolling back.
 
 ```sql
 START TRANSACTION;
 
-INSERT INTO Itineraries (Title, BasePrice, DurationHours, MaxCapacity, IsActive)
-VALUES ('Temporary capacity test', 100.00, 1, 1, TRUE);
+INSERT INTO Itineraries (Title, BasePrice, DurationHours, IsActive)
+VALUES ('Temporary capacity test', 100.00, 1, TRUE);
 SET @capacity_test_id = LAST_INSERT_ID();
+SET @walking_mode_id = (
+    SELECT TourModeID FROM TourModes WHERE ModeCode = 'WALK'
+);
+INSERT INTO Itinerary_Modes (ItineraryID, TourModeID, CapacityLimit)
+VALUES (@capacity_test_id, @walking_mode_id, 1);
 
 INSERT INTO Bookings
-    (CustomerName, CustomerEmail, ItineraryID, TravelDate, FinalPrice)
+    (CustomerName, CustomerEmail, ItineraryID, TourModeID, TravelDate,
+     GroupSize, VehicleCount, FinalPrice)
 VALUES
-    ('Test One', 'test-one@example.com', @capacity_test_id, '2030-01-01', 100.00);
+    ('Test One', 'test-one@example.com', @capacity_test_id, @walking_mode_id,
+     '2030-01-01', 1, 0, 100.00);
 
 -- Run separately; expect SQLSTATE 45000, then run ROLLBACK.
 INSERT INTO Bookings
-    (CustomerName, CustomerEmail, ItineraryID, TravelDate, FinalPrice)
+    (CustomerName, CustomerEmail, ItineraryID, TourModeID, TravelDate,
+     GroupSize, VehicleCount, FinalPrice)
 VALUES
-    ('Test Two', 'test-two@example.com', @capacity_test_id, '2030-01-01', 100.00);
+    ('Test Two', 'test-two@example.com', @capacity_test_id, @walking_mode_id,
+     '2030-01-01', 1, 0, 100.00);
 
 ROLLBACK;
 ```
 
 ### API and frontend smoke test
 
-With MySQL running and the API configured in `.env`, start the API and frontend in separate terminals. Verify `GET /api/itineraries`, open an itinerary to see stops in order, and submit a booking for a date whose capacity is not full. The app should show a booking confirmation. Submitting after filling the itinerary's capacity should show the database trigger message returned as HTTP `409 Conflict`.
+With MySQL running and the API configured in `.env`, start both services from the project root in one terminal with `npm run dev`. Open the Vite URL printed in the terminal, verify `GET /api/itineraries`, open an itinerary to see stops in order, and submit a booking for a date whose capacity is not full. The app should show a booking confirmation. Submitting after filling the itinerary's capacity should show the database trigger message returned as HTTP `409 Conflict`.
