@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # HeritageTrails — Multi-City Heritage-Walk Tour Planner 🏛️🚶‍♂️
 
 HeritageTrails is a database system designed to curate multi-stop cultural and historical walking itineraries across regional tourist destinations (e.g., heritage circuits near Mangaluru Junction). It efficiently manages landmarks, tour guides, audio resources, and custom visitor bookings to optimize the cultural tourism experience.
