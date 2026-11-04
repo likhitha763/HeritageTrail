@@ -1,4 +1,4 @@
-# HeritageTrails — Multi-City Heritage Tour Planner
+# HeritageTrails — Multi-City Heritage-Walk Tour Planner 🏛️🚶‍♂️
 
 HeritageTrails is a database-backed planner for multi-stop cultural and historical tours. Visitors can choose walking, self-drive car, or tourist-bus options for the same heritage itinerary. Mangaluru is the current sample city, and the relational schema supports adding more cities.
 
