@@ -49,7 +49,7 @@ export default function Timeline({ itinerary }) {
             <li className="timeline-stop" key={`${stop.StopOrder}-${stop.LandmarkName}`}>
               <span className="timeline-marker">{String(stop.StopOrder).padStart(2, '0')}</span>
               <div className="stop-content">
-                <p className="stop-city">{stop.CityName} · KARNATAKA</p>
+                <p className="stop-city">{stop.CityName} · {itinerary.State}</p>
                 <h3>{stop.LandmarkName}</h3>
                 {stop.LandmarkDescription && <p className="stop-description">{stop.LandmarkDescription}</p>}
                 <p className="stop-meta">

@@ -1,18 +1,26 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import ItineraryCatalog from '../components/ItineraryCatalog.jsx';
 
 export default function WalksPage({ itineraries, loading, error }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const [duration, setDuration] = useState('all');
   const [travelMode, setTravelMode] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
+  const city = searchParams.get('city') || 'all';
+
+  const cities = useMemo(
+    () => [...new Set(itineraries.map((itinerary) => itinerary.CityName).filter(Boolean))].sort(),
+    [itineraries],
+  );
 
   const filteredItineraries = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     const matching = itineraries.filter((itinerary) => {
       const matchesQuery = !normalizedQuery
-        || String(itinerary.Title).toLowerCase().includes(normalizedQuery);
+        || `${itinerary.Title} ${itinerary.CityName} ${itinerary.State}`.toLowerCase().includes(normalizedQuery);
+      const matchesCity = city === 'all' || itinerary.CityName === city;
       const hours = Number(itinerary.DurationHours);
       const matchesDuration = duration === 'all'
         || (duration === 'short' && hours <= 2)
@@ -21,7 +29,7 @@ export default function WalksPage({ itineraries, loading, error }) {
       const matchesMode = travelMode === 'all'
         || itinerary.Modes.some((mode) => mode.ModeCode === travelMode);
 
-      return matchesQuery && matchesDuration && matchesMode;
+      return matchesQuery && matchesCity && matchesDuration && matchesMode;
     });
 
     if (sortBy === 'duration') {
@@ -31,14 +39,24 @@ export default function WalksPage({ itineraries, loading, error }) {
       return [...matching].sort((first, second) => Number(first.BasePrice) - Number(second.BasePrice));
     }
     return matching;
-  }, [duration, itineraries, query, sortBy, travelMode]);
+  }, [city, duration, itineraries, query, sortBy, travelMode]);
+
+  function selectCity(cityName) {
+    const nextParams = new URLSearchParams(searchParams);
+    if (cityName === 'all') {
+      nextParams.delete('city');
+    } else {
+      nextParams.set('city', cityName);
+    }
+    setSearchParams(nextParams);
+  }
 
   return (
     <main className="page-content">
       <section className="page-intro explorer-intro">
-        <p className="eyebrow"><span className="eyebrow-dot" /> THE HERITAGE TOUR COLLECTION · MANGALURU</p>
-        <h1>Find your way<br />into the city.</h1>
-        <p>Choose a route and how you want to explore it: walking, self-drive car, or tourist bus.</p>
+        <p className="eyebrow"><span className="eyebrow-dot" /> THE HERITAGE TOUR COLLECTION · INDIA</p>
+        <h1>Find your way<br />through India.</h1>
+        <p>Choose a destination and how you want to explore it: walking, self-drive car, or tourist bus.</p>
       </section>
 
       {error ? (
@@ -48,22 +66,31 @@ export default function WalksPage({ itineraries, loading, error }) {
       ) : itineraries.length === 0 ? (
         <div className="empty-state">
           <p className="eyebrow">NO ROUTES JUST YET</p>
-          <h2>The city is ready when you are.</h2>
-          <p>Run the sample data script in MySQL Workbench to add the Mangaluru tours.</p>
+          <h2>India is ready when you are.</h2>
+          <p>Run the sample data script in MySQL Workbench to add the destination tours.</p>
           <Link className="text-link" to="/">Back to home <span aria-hidden="true">→</span></Link>
         </div>
       ) : (
         <>
-          <section className="walk-filters" aria-label="Filter walking routes">
+          <section className="walk-filters" aria-label="Filter tours">
             <label className="walk-search">
               <span aria-hidden="true">⌕</span>
               <input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search a tour or story"
-                aria-label="Search tours"
+                placeholder="Search a city, state, tour or story"
+                aria-label="Search cities, states, tours, or stories"
               />
+            </label>
+            <label className="filter-select">
+              <span>Destination</span>
+              <select value={city} onChange={(event) => selectCity(event.target.value)}>
+                <option value="all">All cities</option>
+                {cities.map((cityName) => (
+                  <option key={cityName} value={cityName}>{cityName}</option>
+                ))}
+              </select>
             </label>
             <label className="filter-select">
               <span>Duration</span>
@@ -101,12 +128,13 @@ export default function WalksPage({ itineraries, loading, error }) {
           ) : (
             <div className="empty-state filter-empty">
               <p className="eyebrow">NO MATCHING WALKS</p>
-              <h2>Try a different search or duration.</h2>
+              <h2>Try a different city, search, or duration.</h2>
               <button
                 className="text-button"
                 type="button"
                 onClick={() => {
                   setQuery('');
+                  setSearchParams(new URLSearchParams());
                   setDuration('all');
                   setTravelMode('all');
                 }}

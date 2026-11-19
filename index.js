@@ -33,15 +33,40 @@ app.get('/api/itineraries', async (req, res, next) => {
        ORDER BY i.Title, tm.TourModeID`
     );
 
+    const [cityRows] = await pool.execute(
+      `SELECT Itinerary_Stops.ItineraryID, Cities.Name AS CityName, Cities.State
+       FROM Itinerary_Stops
+       JOIN Itineraries ON Itineraries.ItineraryID = Itinerary_Stops.ItineraryID
+       JOIN Landmarks ON Landmarks.LandmarkID = Itinerary_Stops.LandmarkID
+       JOIN Cities ON Cities.CityID = Landmarks.CityID
+       WHERE Itineraries.IsActive = TRUE
+         AND Itinerary_Stops.IsActive = TRUE
+         AND Landmarks.IsActive = TRUE
+         AND Cities.IsActive = TRUE
+       ORDER BY Itinerary_Stops.ItineraryID, Itinerary_Stops.StopOrder`
+    );
+    const cityByItineraryId = new Map();
+    for (const row of cityRows) {
+      if (!cityByItineraryId.has(row.ItineraryID)) {
+        cityByItineraryId.set(row.ItineraryID, {
+          CityName: row.CityName,
+          State: row.State,
+        });
+      }
+    }
+
     const itinerariesById = new Map();
     for (const row of rows) {
       let itinerary = itinerariesById.get(row.ItineraryID);
       if (!itinerary) {
+        const city = cityByItineraryId.get(row.ItineraryID);
         itinerary = {
           ItineraryID: row.ItineraryID,
           Title: row.Title,
           BasePrice: row.BasePrice,
           DurationHours: row.DurationHours,
+          CityName: city?.CityName || 'India',
+          State: city?.State || '',
           Modes: [],
         };
         itinerariesById.set(row.ItineraryID, itinerary);

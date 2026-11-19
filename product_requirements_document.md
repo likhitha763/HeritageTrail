@@ -16,12 +16,13 @@ The system maps the *exact sequential flow* of a heritage itinerary using a brid
 
 ### 2.1 User-Facing Features (Frontend)
 * **Itinerary Catalog:** Users can view heritage tours, base price, duration, available travel modes, and the capacity for each mode.
+* **Destination Filter:** Users can narrow the tour catalog by city and search tour titles, city names, or state names.
 * **Timeline View:** Clicking an itinerary executes a stored procedure to display the ordered landmark stops, entry fees, and city data.
 * **Mode Selection:** Visitors select walking, self-drive car, or tourist-bus mode from the options offered for that itinerary.
 * **Booking System:** Users book a selected itinerary/mode for a `TravelDate`. The system stores group size and, for self-drive mode, number of cars; it locks the total price and defaults `PaymentStatus`.
 
 ### 2.2 System Features (Backend/Database)
-* **Demo Data Management:** The sample Cities, Landmarks, Itineraries, route modes, and stops are loaded with `seed.sql`; a separate admin CRUD interface is outside the current implementation.
+* **Demo Data Management:** `seed.sql` loads sample data for Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, and Kochi. A separate admin CRUD interface is outside the current implementation.
 * **Soft Deletion:** Instead of hard-deleting closed landmarks or retired tours, the system uses an `IsActive` boolean flag to hide them while preserving past booking data.
 * **Automated Capacity Control:** `Itinerary_Modes` stores a capacity limit for each itinerary/mode. The booking trigger counts people/seats for walking and bus options and vehicle slots for self-drive car options.
 * **Data Integrity Enforcement:** A trigger prevents the same landmark from being added to the same itinerary more than once.
@@ -65,7 +66,7 @@ The system maps the *exact sequential flow* of a heritage itinerary using a brid
 3. Write your `ALTER TABLE` statements or include constraints (Foreign Keys).
 4. Code and test the Stored Procedure (`GetItineraryDetails`).
 5. Code and test the Triggers.
-6. Write a `seed_data.sql` file to insert dummy data (e.g., Mangaluru City, Sultan Battery, St. Aloysius Chapel) to ensure queries work.
+6. Write a `seed_data.sql` file to insert cities, landmarks, and multiple itineraries (for example, the sample destinations in `seed.sql`) to ensure queries work across destinations.
 
 ### Phase 2: Backend API Development (Days 3-4)
 1. Initialize a Node.js project (`npm init -y`) and install `express`, `mysql2`, `cors`, and `dotenv`.

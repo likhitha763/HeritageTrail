@@ -12,15 +12,15 @@ function SiteHeader() {
     <header className="site-header">
       <Link className="brand" to="/" aria-label="HeritageTrails home">
         <span className="brand-mark" aria-hidden="true">H</span>
-        <span className="brand-name">HERITAGETRAILS <small>MANGALURU HERITAGE TOURS</small></span>
+        <span className="brand-name">HERITAGETRAILS <small>INDIA HERITAGE TOURS</small></span>
       </Link>
       <nav className="main-nav" aria-label="Main navigation">
         <NavLink to="/" end>Home</NavLink>
         <NavLink to="/tours">Explore tours</NavLink>
-        <NavLink to="/about">Project &amp; DBMS</NavLink>
+        <NavLink to="/about">Travel guide</NavLink>
       </nav>
       <div className="header-actions">
-        <span className="city-pill"><span aria-hidden="true">●</span> Mangaluru, IN</span>
+        <span className="city-pill"><span aria-hidden="true">●</span> Across India</span>
         <Link className="header-cta" to="/bookings">My bookings <span aria-hidden="true">↗</span></Link>
       </div>
     </header>
@@ -30,7 +30,7 @@ function SiteHeader() {
 function SiteFooter() {
   return (
     <footer className="site-footer">
-      <Link className="footer-brand" to="/">HERITAGETRAILS <span>·</span> MANGALURU</Link>
+      <Link className="footer-brand" to="/">HERITAGETRAILS <span>·</span> INDIA</Link>
       <p>Choose your way. Discover the stories.</p>
       <Link to="/tours">Find a tour <span aria-hidden="true">→</span></Link>
       <Link to="/bookings">My bookings <span aria-hidden="true">→</span></Link>
@@ -115,7 +115,10 @@ export default function App() {
             path="/walks/:id"
             element={<WalkDetailPage itineraries={itineraries} loading={loading} />}
           />
-          <Route path="/about" element={<AboutPage />} />
+          <Route
+            path="/about"
+            element={<AboutPage itineraries={itineraries} loading={loading} error={error} />}
+          />
           <Route path="/bookings" element={<MyBookingsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
