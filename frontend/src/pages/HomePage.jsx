@@ -32,8 +32,8 @@ export default function HomePage({ itineraries, loading, error }) {
         <div className="hero-image-shade" aria-hidden="true" />
         <div className="hero-texture" aria-hidden="true" />
         <div className="home-hero-copy">
-          <p className="eyebrow eyebrow-light"><span className="eyebrow-dot" /> HERITAGE TOURS · ACROSS INDIA</p>
-          <h1>A country,<br />your way.</h1>
+          <p className="eyebrow eyebrow-light"><span className="eyebrow-dot" /> A NOTE FROM THE JOURNEY · CARTOGRAPHIC ARCHIVAL</p>
+          <h1>“The best way into a place is through<br />the stories it keeps.”</h1>
           <p className="hero-description">
             Explore stories across Mangaluru, Delhi, Jaipur, Agra, Varanasi,
             Mysuru, Hampi, and Kochi by foot, self-drive car, or tourist bus.

@@ -30,10 +30,42 @@ function SiteHeader() {
 function SiteFooter() {
   return (
     <footer className="site-footer">
-      <Link className="footer-brand" to="/">HERITAGETRAILS <span>·</span> INDIA</Link>
-      <p>Choose your way. Discover the stories.</p>
-      <Link to="/tours">Find a tour <span aria-hidden="true">→</span></Link>
-      <Link to="/bookings">My bookings <span aria-hidden="true">→</span></Link>
+      <div className="footer-main">
+        <div className="footer-brand-column">
+          <Link className="footer-brand" to="/">
+            HERITAGETRAILS <span>·</span> INDIA
+          </Link>
+          <p>Thoughtful journeys through India&apos;s most storied places.</p>
+          <Link className="footer-cta" to="/tours">
+            Explore all tours <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+
+        <nav className="footer-column" aria-label="Explore">
+          <h2>Explore</h2>
+          <Link to="/tours">Heritage walks</Link>
+          <Link to="/about">Travel guide</Link>
+          <Link to="/bookings">My bookings</Link>
+        </nav>
+
+        <nav className="footer-column" aria-label="Plan your visit">
+          <h2>Plan your visit</h2>
+          <Link to="/about">Before you go</Link>
+          <Link to="/tours">Popular destinations</Link>
+          <Link to="/bookings">View your itinerary</Link>
+        </nav>
+
+        <div className="footer-column footer-about">
+          <h2>Heritage, closer</h2>
+          <p>Curated walking experiences with local context and room to discover.</p>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <p>© 2026 HeritageTrails India</p>
+        <p>Choose your way. Discover the stories.</p>
+        <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+      </div>
     </footer>
   );
 }
@@ -74,7 +106,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="app-shell">
+      <div className="app-shell" id="top">
         <SiteHeader />
         <Routes>
           <Route
