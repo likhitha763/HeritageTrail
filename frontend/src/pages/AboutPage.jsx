@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { getDestinationArtwork } from '../data/walkArtwork.js';
+import SwarmCursor from '../components/SwarmCursor.jsx';
 
 const steps = [
   ['01', 'Choose a destination', 'Search by city or state, then browse the tours currently available there.'],
@@ -59,11 +60,13 @@ export default function AboutPage({ itineraries, loading, error }) {
 
   return (
     <main className="page-content guide-page">
-      <section className="page-intro guide-intro">
-        <p className="eyebrow">TRAVEL GUIDE · INDIA</p>
-        <h1>Plan a day of<br />local stories.</h1>
-        <p>Find a destination, choose a route that suits your pace, and see what to expect before you reserve.</p>
-      </section>
+      <SwarmCursor className="blue-swarm-intro" count={280} size={2} spread={100}>
+        <section className="page-intro guide-intro">
+          <p className="eyebrow">TRAVEL GUIDE · INDIA</p>
+          <h1>Plan a day of<br />local stories.</h1>
+          <p>Find a destination, choose a route that suits your pace, and see what to expect before you reserve.</p>
+        </section>
+      </SwarmCursor>
 
       <nav className="guide-nav" aria-label="Travel guide sections">
         <a href="#how-it-works">How it works</a>

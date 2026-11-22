@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import ItineraryCatalog from '../components/ItineraryCatalog.jsx';
+import SwarmCursor from '../components/SwarmCursor.jsx';
 
 export default function WalksPage({ itineraries, loading, error }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,11 +54,13 @@ export default function WalksPage({ itineraries, loading, error }) {
 
   return (
     <main className="page-content">
-      <section className="page-intro explorer-intro">
-        <p className="eyebrow"><span className="eyebrow-dot" /> THE HERITAGE TOUR COLLECTION · INDIA</p>
-        <h1>Find your way<br />through India.</h1>
-        <p>Choose a destination and how you want to explore it: walking, self-drive car, or tourist bus.</p>
-      </section>
+      <SwarmCursor className="blue-swarm-intro" count={300} size={2} spread={104}>
+        <section className="page-intro explorer-intro">
+          <p className="eyebrow"><span className="eyebrow-dot" /> THE HERITAGE TOUR COLLECTION · INDIA</p>
+          <h1>Find your way<br />through India.</h1>
+          <p>Choose a destination and how you want to explore it: walking, self-drive car, or tourist bus.</p>
+        </section>
+      </SwarmCursor>
 
       {error ? (
         <p className="notice notice-error" role="alert">{error}</p>

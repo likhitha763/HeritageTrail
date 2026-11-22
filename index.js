@@ -259,6 +259,46 @@ app.post('/api/bookings', async (req, res, next) => {
   }
 });
 
+app.patch('/api/bookings/:id/payment', async (req, res, next) => {
+  const bookingId = Number(req.params.id);
+  const email = typeof req.body?.email === 'string' ? req.body.email.trim() : '';
+  const paymentMethod = typeof req.body?.paymentMethod === 'string'
+    ? req.body.paymentMethod.trim()
+    : '';
+
+  if (!Number.isSafeInteger(bookingId) || bookingId < 1) {
+    return res.status(400).json({ error: 'A valid booking ID is required.' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'A valid email address is required.' });
+  }
+  if (!paymentMethod) {
+    return res.status(400).json({ error: 'Select a payment method.' });
+  }
+
+  try {
+    const [result] = await pool.execute(
+      `UPDATE Bookings
+       SET PaymentStatus = 'Paid'
+       WHERE BookingID = ? AND CustomerEmail = ? AND IsActive = TRUE`,
+      [bookingId, email]
+    );
+
+    if (result.affectedRows !== 1) {
+      return res.status(404).json({ error: 'Booking not found for this email address.' });
+    }
+
+    res.json({
+      bookingId,
+      paymentStatus: 'Paid',
+      paymentMethod,
+      message: 'Payment confirmed successfully.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.use((error, req, res, next) => {
   console.error(error);
 

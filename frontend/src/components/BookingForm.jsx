@@ -74,8 +74,8 @@ export default function BookingForm({ itinerary }) {
 
   return (
     <section className="panel booking-panel">
-      <p className="eyebrow">MAKE IT YOURS</p>
-      <h2>Book this tour</h2>
+      <p className="eyebrow">DIRECT CIRCUIT BOOKING</p>
+      <h2>Reserve Your Circuit Slot</h2>
       <p className="booking-intro">
         From ₹{Number(itinerary.BasePrice).toFixed(2)} per person, plus any landmark entry fees.
       </p>

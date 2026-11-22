@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Link, NavLink, Route, Routes } from 'react-router-dom';
 import { getItineraries } from './api.js';
+import FallingFooterText from './components/FallingFooterText.jsx';
 import AboutPage from './pages/AboutPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import MyBookingsPage from './pages/MyBookingsPage.jsx';
@@ -16,12 +17,19 @@ function SiteHeader() {
       </Link>
       <nav className="main-nav" aria-label="Main navigation">
         <NavLink to="/" end>Home</NavLink>
-        <NavLink to="/tours">Explore tours</NavLink>
-        <NavLink to="/about">Travel guide</NavLink>
+        <NavLink to="/tours">Explore Tours</NavLink>
+        <NavLink to="/walks/1">Heritage Detail</NavLink>
+        <NavLink to="/bookings">My Bookings</NavLink>
+        <NavLink to="/about">Travel Guide</NavLink>
+        <NavLink to="/about">Admin</NavLink>
       </nav>
       <div className="header-actions">
-        <span className="city-pill"><span aria-hidden="true">●</span> Across India</span>
-        <Link className="header-cta" to="/bookings">My bookings <span aria-hidden="true">↗</span></Link>
+        <button className="country-select" type="button" aria-label="Select country">
+          <span aria-hidden="true">●</span> All Cities <span aria-hidden="true">⌄</span>
+        </button>
+        <button className="header-search" type="button" aria-label="Search tours">⌕</button>
+        <Link className="header-cta" to="/bookings">Book a walk <span aria-hidden="true">↗</span></Link>
+        <span className="header-profile" aria-label="Guest profile">G</span>
       </div>
     </header>
   );
@@ -60,6 +68,16 @@ function SiteFooter() {
           <p>Curated walking experiences with local context and room to discover.</p>
         </div>
       </div>
+
+      <section className="footer-story">
+        <div className="footer-story-kicker">
+          <span className="footer-story-rule" />
+          <span>A SMALL NOTE FROM THE JOURNEY</span>
+          <span className="footer-story-rule" />
+        </div>
+        <FallingFooterText />
+        <p>Hover over the words and watch each story find its way back.</p>
+      </section>
 
       <div className="footer-bottom">
         <p>© 2026 HeritageTrails India</p>

@@ -33,3 +33,10 @@ export function createBooking(booking) {
 export function getBookings(email) {
   return request(`/api/bookings?email=${encodeURIComponent(email)}`);
 }
+
+export function payBooking(bookingId, email, paymentMethod) {
+  return request(`/api/bookings/${encodeURIComponent(bookingId)}/payment`, {
+    method: 'PATCH',
+    body: JSON.stringify({ email, paymentMethod }),
+  });
+}
