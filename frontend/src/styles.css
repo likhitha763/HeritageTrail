@@ -1998,6 +1998,16 @@ select:focus-visible { outline: 3px solid #55b4d1; }
   --line: rgba(198, 166, 103, 0.42);
 }
 
+/* Keep the header as one continuous blue band across the viewport. */
+.site-header {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-inline: clamp(24px, 2.5vw, 36px);
+  border-bottom: 1px solid rgba(198, 166, 103, 0.58);
+  background: #07101c;
+  backdrop-filter: none;
+}
+
 body {
   background:
     radial-gradient(circle at 50% 14%, rgba(125, 167, 194, 0.34), transparent 34rem),
