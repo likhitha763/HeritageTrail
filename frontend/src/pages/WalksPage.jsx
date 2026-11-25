@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import ItineraryCatalog from '../components/ItineraryCatalog.jsx';
 import SwarmCursor from '../components/SwarmCursor.jsx';
@@ -10,6 +10,14 @@ export default function WalksPage({ itineraries, loading, error }) {
   const [travelMode, setTravelMode] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
   const city = searchParams.get('city') || 'all';
+  const searchInput = useRef(null);
+
+  useEffect(() => {
+    if (window.location.hash === '#tour-search') {
+      searchInput.current?.focus();
+      searchInput.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, []);
 
   const cities = useMemo(
     () => [...new Set(itineraries.map((itinerary) => itinerary.CityName).filter(Boolean))].sort(),
@@ -20,7 +28,9 @@ export default function WalksPage({ itineraries, loading, error }) {
     const normalizedQuery = query.trim().toLowerCase();
     const matching = itineraries.filter((itinerary) => {
       const matchesQuery = !normalizedQuery
-        || `${itinerary.Title} ${itinerary.CityName} ${itinerary.State}`.toLowerCase().includes(normalizedQuery);
+        || `${itinerary.Title} ${itinerary.CityName} ${itinerary.State} ${itinerary.HistoricalSignificance} ${itinerary.SearchText}`
+          .toLowerCase()
+          .includes(normalizedQuery);
       const matchesCity = city === 'all' || itinerary.CityName === city;
       const hours = Number(itinerary.DurationHours);
       const matchesDuration = duration === 'all'
@@ -79,6 +89,8 @@ export default function WalksPage({ itineraries, loading, error }) {
             <label className="walk-search">
               <span aria-hidden="true">⌕</span>
               <input
+                id="tour-search"
+                ref={searchInput}
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}

@@ -10,7 +10,15 @@ VALUES
     (5, 'Varanasi', 'Uttar Pradesh', 'One of India''s oldest living cities, known for its riverfront ghats and sacred sites.'),
     (6, 'Mysuru', 'Karnataka', 'A former royal capital known for its palace, markets, and religious landmarks.'),
     (7, 'Hampi', 'Karnataka', 'The former Vijayanagara capital, known for its temples and monumental ruins.'),
-    (8, 'Kochi', 'Kerala', 'A historic port city shaped by Indian Ocean trade and its Fort Kochi and Mattancherry heritage districts.')
+    (8, 'Kochi', 'Kerala', 'A historic port city shaped by Indian Ocean trade and its Fort Kochi and Mattancherry heritage districts.'),
+    (9, 'Mumbai', 'Maharashtra', 'A major Arabian Sea port whose islands, harbour, and civic architecture reflect centuries of trade and migration.'),
+    (10, 'Kolkata', 'West Bengal', 'A cultural centre on the Hooghly River with a layered colonial, literary, and Bengali heritage.'),
+    (11, 'Chennai', 'Tamil Nadu', 'A Coromandel Coast city shaped by Tamil traditions, historic temples, and maritime connections.'),
+    (12, 'Hyderabad', 'Telangana', 'A Deccan city shaped by the Qutb Shahi dynasty, the Nizams, and a long history of regional exchange.'),
+    (13, 'Ahmedabad', 'Gujarat', 'A historic city on the Sabarmati River known for its walled-city neighbourhoods, stepwells, and textile heritage.'),
+    (14, 'Amritsar', 'Punjab', 'A major centre of Sikh heritage whose history also preserves important stories of shared life and partition.'),
+    (15, 'Bengaluru', 'Karnataka', 'A city of old market neighbourhoods, royal sites, gardens, and a later role as a centre of technology.'),
+    (16, 'Puri', 'Odisha', 'A coastal pilgrimage city known for Jagannath traditions, temple architecture, and its place in Odia culture.')
 ON DUPLICATE KEY UPDATE
     Name = VALUES(Name),
     State = VALUES(State),
@@ -72,7 +80,39 @@ VALUES
     (50, 7, 'Mahanavami Dibba', 'A large ceremonial platform within Hampi''s Royal Enclosure.', 40.00),
     (51, 8, 'Dutch Cemetery, Fort Kochi', 'A historic cemetery in the Fort Kochi heritage district.', 0.00),
     (52, 8, 'Mattancherry Spice Market', 'A historic trading area associated with Kochi''s spice trade.', 0.00),
-    (53, 4, 'Chini Ka Rauza', 'A Mughal tomb in Agra known for its glazed tile decoration.', 30.00)
+    (53, 4, 'Chini Ka Rauza', 'A Mughal tomb in Agra known for its glazed tile decoration.', 30.00),
+    (54, 9, 'Gateway of India', 'A monumental waterfront arch completed in the early twentieth century beside Mumbai Harbour.', 25.00),
+    (55, 9, 'Chhatrapati Shivaji Maharaj Terminus', 'A historic railway terminus celebrated for its Victorian Gothic and Indian architectural details.', 0.00),
+    (56, 9, 'Elephanta Caves', 'Rock-cut cave temples on Elephanta Island, reached by ferry from Mumbai Harbour.', 40.00),
+    (57, 9, 'Mani Bhavan Gandhi Sangrahalaya', 'A museum and memorial in the former Mumbai residence associated with Mahatma Gandhi.', 0.00),
+    (58, 10, 'Victoria Memorial', 'A marble memorial and museum set within gardens in central Kolkata.', 30.00),
+    (59, 10, 'Howrah Bridge', 'A landmark cantilever bridge crossing the Hooghly River and connecting central Kolkata with Howrah.', 0.00),
+    (60, 10, 'Indian Museum, Kolkata', 'One of the country''s oldest museums, with collections spanning art, archaeology, and natural history.', 50.00),
+    (61, 10, 'Dakshineswar Kali Temple', 'A riverside temple complex on the Hooghly associated with nineteenth-century Bengali religious history.', 0.00),
+    (62, 11, 'Fort St. George', 'A seventeenth-century fort complex that houses a museum and historic government buildings.', 15.00),
+    (63, 11, 'Kapaleeshwarar Temple', 'A Dravidian-style temple in Mylapore dedicated to Shiva and central to local festivals.', 0.00),
+    (64, 11, 'San Thome Basilica', 'A church built over a site traditionally associated with the tomb of Saint Thomas.', 0.00),
+    (65, 11, 'Marina Beach', 'A long public beachfront that has been part of Chennai''s civic life since the colonial period.', 0.00),
+    (66, 12, 'Charminar', 'A four-minaret monument at the heart of Hyderabad''s historic old city and bazaar district.', 25.00),
+    (67, 12, 'Golconda Fort', 'A hilltop fort complex associated with the Qutb Shahi kingdom and the region''s historic diamond trade.', 40.00),
+    (68, 12, 'Chowmahalla Palace', 'A palace complex that served as a ceremonial seat of the Nizams of Hyderabad.', 30.00),
+    (69, 12, 'Mecca Masjid', 'A historic mosque near Charminar and one of the largest mosque complexes in Hyderabad.', 0.00),
+    (70, 13, 'Sabarmati Ashram', 'A riverside site associated with Mahatma Gandhi''s life and India''s independence movement.', 0.00),
+    (71, 13, 'Bhadra Fort', 'A fort and palace complex at the historic centre of Ahmedabad, founded in the fifteenth century.', 0.00),
+    (72, 13, 'Sidi Saiyyed Mosque', 'A sixteenth-century mosque known for its carved stone lattice windows.', 0.00),
+    (73, 13, 'Adalaj Stepwell', 'An intricately carved stepwell north of Ahmedabad that provided water and shelter to travellers.', 20.00),
+    (74, 14, 'Golden Temple', 'The Harmandir Sahib, a central Sikh place of worship whose community kitchen welcomes visitors.', 0.00),
+    (75, 14, 'Jallianwala Bagh', 'A public garden and memorial preserving the history of the 1919 massacre.', 0.00),
+    (76, 14, 'Partition Museum', 'A museum documenting personal accounts and objects connected with the 1947 Partition of India.', 20.00),
+    (77, 14, 'Gobindgarh Fort', 'A historic fort in Amritsar with exhibits on the city and the region''s history.', 50.00),
+    (78, 15, 'Bengaluru Palace', 'A nineteenth-century palace whose architecture and grounds reflect Bengaluru''s royal history.', 50.00),
+    (79, 15, 'Tipu Sultan''s Summer Palace', 'A teak-and-plaster palace associated with Tipu Sultan and the late eighteenth-century Mysore kingdom.', 20.00),
+    (80, 15, 'Vidhana Soudha', 'The monumental seat of Karnataka''s state legislature, known for its twentieth-century Neo-Dravidian architecture.', 0.00),
+    (81, 15, 'Lalbagh Botanical Garden', 'A historic botanical garden with a glasshouse and plant collections developed over several centuries.', 30.00),
+    (82, 16, 'Jagannath Temple, Puri', 'A major Hindu pilgrimage temple and the centre of Puri''s annual Rath Yatra tradition.', 0.00),
+    (83, 16, 'Gundicha Temple', 'A temple connected with the annual Rath Yatra, when the deities travel from the Jagannath Temple.', 0.00),
+    (84, 16, 'Narendra Tank', 'A historic temple tank used for religious ceremonies and festivals in Puri.', 0.00),
+    (85, 16, 'Puri Beach', 'A public shoreline that is part of Puri''s coastal life and pilgrimage landscape.', 0.00)
 ON DUPLICATE KEY UPDATE
     CityID = VALUES(CityID),
     Name = VALUES(Name),
@@ -100,7 +140,15 @@ VALUES
     (15, 'Hampi Temples and Bazaar', 850.00, 5),
     (16, 'Hampi Royal Enclosure', 800.00, 5),
     (17, 'Fort Kochi Waterfront & Heritage', 500.00, 3),
-    (18, 'Mattancherry Palace & Jewish Town', 600.00, 3)
+    (18, 'Mattancherry Palace & Jewish Town', 600.00, 3),
+    (19, 'Mumbai Harbour & Civic Heritage', 850.00, 5),
+    (20, 'Kolkata Riverfront & Cultural Heritage', 800.00, 5),
+    (21, 'Chennai Temples & Coastal Stories', 650.00, 4),
+    (22, 'Hyderabad Deccan Heritage', 750.00, 5),
+    (23, 'Ahmedabad Walled City & Sabarmati', 650.00, 4),
+    (24, 'Amritsar Sacred & Shared History', 650.00, 4),
+    (25, 'Bengaluru Palaces & Gardens', 700.00, 4),
+    (26, 'Puri Temple & Coastal Heritage', 600.00, 4)
 ON DUPLICATE KEY UPDATE
     Title = VALUES(Title),
     BasePrice = VALUES(BasePrice),
@@ -127,13 +175,21 @@ VALUES
     (15, 1, 20), (15, 2, 8), (15, 3, 30),
     (16, 1, 16), (16, 2, 6), (16, 3, 24),
     (17, 1, 20), (17, 2, 8), (17, 3, 30),
-    (18, 1, 18), (18, 2, 6), (18, 3, 24)
+    (18, 1, 18), (18, 2, 6), (18, 3, 24),
+    (19, 1, 20), (19, 2, 8), (19, 3, 30),
+    (20, 1, 20), (20, 2, 8), (20, 3, 30),
+    (21, 1, 20), (21, 2, 8), (21, 3, 30),
+    (22, 1, 20), (22, 2, 8), (22, 3, 30),
+    (23, 1, 20), (23, 2, 8), (23, 3, 30),
+    (24, 1, 20), (24, 2, 8), (24, 3, 30),
+    (25, 1, 20), (25, 2, 8), (25, 3, 30),
+    (26, 1, 20), (26, 2, 8), (26, 3, 30)
 ON DUPLICATE KEY UPDATE
     CapacityLimit = VALUES(CapacityLimit),
     IsActive = TRUE;
 
 DELETE FROM Itinerary_Stops
-WHERE ItineraryID BETWEEN 1 AND 18;
+WHERE ItineraryID BETWEEN 1 AND 26;
 
 INSERT INTO Itinerary_Stops
     (ItineraryID, LandmarkID, StopOrder)
@@ -156,7 +212,15 @@ VALUES
     (15, 29, 1), (15, 31, 2), (15, 30, 3),
     (16, 32, 1), (16, 35, 2), (16, 49, 3), (16, 50, 4),
     (17, 36, 1), (17, 37, 2), (17, 38, 3), (17, 39, 4), (17, 51, 5),
-    (18, 40, 1), (18, 41, 2), (18, 42, 3), (18, 52, 4);
+    (18, 40, 1), (18, 41, 2), (18, 42, 3), (18, 52, 4),
+    (19, 54, 1), (19, 55, 2), (19, 56, 3), (19, 57, 4),
+    (20, 58, 1), (20, 59, 2), (20, 60, 3), (20, 61, 4),
+    (21, 62, 1), (21, 63, 2), (21, 64, 3), (21, 65, 4),
+    (22, 66, 1), (22, 67, 2), (22, 68, 3), (22, 69, 4),
+    (23, 70, 1), (23, 71, 2), (23, 72, 3), (23, 73, 4),
+    (24, 74, 1), (24, 75, 2), (24, 76, 3), (24, 77, 4),
+    (25, 78, 1), (25, 79, 2), (25, 80, 3), (25, 81, 4),
+    (26, 82, 1), (26, 83, 2), (26, 84, 3), (26, 85, 4);
 
 INSERT INTO Bookings
     (BookingID, CustomerName, CustomerEmail, ItineraryID, TourModeID,

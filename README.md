@@ -1,6 +1,6 @@
 # HeritageTrails — Multi-City Heritage-Walk Tour Planner 🏛️🚶‍♂️
 
-HeritageTrails is a database-backed planner for multi-stop cultural and historical tours. Visitors can choose walking, self-drive car, or tourist-bus options for the same heritage itinerary. Sample destinations include Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, and Kochi.
+HeritageTrails is a database-backed planner for multi-stop cultural and historical tours. Visitors can choose walking, self-drive car, or tourist-bus options for the same heritage itinerary. Sample destinations include Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, Kochi, Mumbai, Kolkata, Chennai, Hyderabad, Ahmedabad, Amritsar, Bengaluru, and Puri.
 
 ## 📌 Project Overview
 The project manages cities, landmarks, sequential stops, transport modes, mode-specific capacities, and visitor bookings while maintaining database-level integrity.
@@ -9,7 +9,7 @@ This DBMS mini-project demonstrates relational modeling, normalization, stored p
 
 ## ✨ Key Features
 * **Multi-mode itineraries:** Offer walking, self-drive car, and tourist-bus options for a route.
-* **Multi-city discovery:** Browse eight Indian cities from destination cards, then filter or search tours by city and state.
+* **Multi-city discovery:** Browse sixteen Indian cities from destination cards, then filter or search tours by city, state, landmark, or place history.
 * **Ordered stops:** Link itineraries to landmarks through a bridge table and display them in sequence.
 * **Mode-specific capacity:** Count walking groups and bus seats as people; count self-drive capacity as vehicle slots.
 * **Booking and price integrity:** Store the selected mode and lock in the final booking price.
@@ -36,7 +36,7 @@ These are guided operator experiences and are not directly price-equivalent to t
 
 ## Scenic imagery and effects
 
-The site uses locally stored photographs from Wikimedia Commons, not generated images. Destination cards show a photo for each sample city; tours use their city's photo unless they already have a specific Mangaluru image. The resized previews are credited below:
+The site uses locally stored photographs from Wikimedia Commons, not generated images. Destination cards and tour pages use locally stored destination photos; tour timelines show landmark-specific photos where available and a clearly labelled representative city image otherwise. Credits for the original destination images are below. Landmark photo sources and license links are also available in the Travel Guide and [landmarkPhotoCredits.json](./frontend/src/data/landmarkPhotoCredits.json).
 
 | Local image | Source and author | License |
 | --- | --- | --- |
@@ -84,9 +84,9 @@ For a beginner-friendly explanation of the SQL and the full database-to-website 
 
 1. Use a new, empty `HeritageWalks` database. `schema.sql` creates the tables and database rules; it is not an upgrade script. If that database already has tables, choose another name and use it in both SQL files and the `DB_NAME` value in `.env`.
 2. Open `schema.sql` in MySQL Workbench and execute it.
-3. After it succeeds, open `seed.sql` and execute it. This loads eight cities, eighteen itineraries, 53 landmarks, ordered stops, travel options, and sample bookings.
+3. After it succeeds, open `seed.sql` and execute it. This loads sixteen cities, twenty-six itineraries, 85 landmarks, ordered stops, travel options, and sample bookings.
 
-Run `schema.sql` only once on an empty database. `seed.sql` can be run again to refresh the sample records; it owns city IDs `1`-`8`, landmark IDs `1`-`53`, itinerary IDs `1`-`18`, sample booking IDs `1` and `2`, and the stops for itineraries `1`-`18`. It deletes and rebuilds stops only for those sample itinerary IDs. Avoid using those IDs for custom records.
+Run `schema.sql` only once on an empty database. `seed.sql` can be run again to refresh the sample records; it owns city IDs `1`-`16`, landmark IDs `1`-`85`, itinerary IDs `1`-`26`, sample booking IDs `1` and `2`, and the stops for itineraries `1`-`26`. It deletes and rebuilds stops only for those sample itinerary IDs. Avoid using those IDs for custom records.
 
 ### 2. Configure and start the application
 
@@ -116,7 +116,7 @@ The API listens on `http://localhost:3001` by default and Vite usually serves th
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| `GET` | `/api/itineraries` | List active itineraries, their destination, offered modes, and per-mode capacities |
+| `GET` | `/api/itineraries` | List active itineraries, destination history, searchable landmark details, offered modes, and capacities |
 | `GET` | `/api/itineraries/:id` | Get the active stop timeline from `GetItineraryDetails` |
 | `GET` | `/api/bookings?email=...` | Find active bookings associated with an email address |
 | `POST` | `/api/bookings` | Create a group booking and lock in the per-person price plus active landmark entry fees |
@@ -156,7 +156,7 @@ CALL GetItineraryDetails(1);
 SELECT CustomerName, TravelDate, FinalPrice FROM Bookings;
 ```
 
-The first query should return eighteen routes. `CALL` should return the ordered stops for route 1. The last query should show the two sample bookings.
+The first query should return twenty-six routes. `CALL` should return the ordered stops for route 1. The last query should show the two sample bookings. In Explore Tours, searches can match a city, state, tour title, historical summary, or a landmark name and description.
 
 ### API and frontend smoke test
 

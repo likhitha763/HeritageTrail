@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { getDestinationArtwork } from '../data/walkArtwork.js';
+import photoCredits from '../data/landmarkPhotoCredits.json';
 import SwarmCursor from '../components/SwarmCursor.jsx';
 
 const steps = [
-  ['01', 'Choose a destination', 'Search by city or state, then browse the tours currently available there.'],
+  ['01', 'Choose a destination', 'Search by city, state, landmark, or place history, then browse matching tours.'],
   ['02', 'Pick a route', 'Review the tour length, base price, travel options, and the ordered stops before deciding.'],
   ['03', 'Choose how to travel', 'Select walking, self-drive, or a tourist bus when that option is offered for your tour.'],
   ['04', 'Reserve your place', 'Enter your name, email, travel date, and group size. Your booking is saved with payment pending.'],
@@ -12,7 +13,7 @@ const steps = [
 const faqs = [
   {
     question: 'Which destinations can I book?',
-    answer: 'Bookable destinations are listed in the destination guide below. Search also matches a city’s state, but a city needs tour data before it can show bookable routes.',
+    answer: 'The destination guide lists all bookable cities. Search also matches states, landmark names, and historical summaries for places with sample tours.',
   },
   {
     question: 'How is the tour price calculated?',
@@ -34,12 +35,20 @@ const faqs = [
 
 const destinationTips = {
   Agra: 'Leave extra time for security checks and crowds around the major monuments.',
+  Ahmedabad: 'The old city lanes are easiest to explore on foot; allow extra time for the stepwell outside the centre.',
+  Amritsar: 'Dress respectfully at places of worship and allow time for security checks.',
+  Bengaluru: 'Check opening hours before combining palace visits with the gardens.',
+  Chennai: 'Plan for heat and traffic when travelling between the old city and the coast.',
   Delhi: 'Allow extra travel time between historic districts and major landmarks.',
   Hampi: 'The archaeological area is spread out and uneven; carry water and wear comfortable shoes.',
+  Hyderabad: 'The old-city bazaar is busy; check fort and palace opening times before travelling.',
   Jaipur: 'Many heritage sights are outdoors; carry water and check fort opening hours before you go.',
+  Kolkata: 'Allow time for traffic between riverfront landmarks and the city centre.',
   Kochi: 'Allow time for transfers between the Fort Kochi waterfront and Mattancherry stops.',
   Mangaluru: 'Routes can combine waterfront and temple stops, so check opening times before setting out.',
+  Mumbai: 'Check ferry schedules and allow time for security at major waterfront attractions.',
   Mysuru: 'Start early if you plan to combine palace, market, and hilltop stops.',
+  Puri: 'Respect temple access rules; some places of worship have visitor restrictions.',
   Varanasi: 'Old-city lanes and ghat steps can be uneven; comfortable footwear is useful.',
 };
 
@@ -50,6 +59,7 @@ export default function AboutPage({ itineraries, loading, error }) {
     const destination = destinationsByName.get(cityName) || {
       CityName: cityName,
       State: itinerary.State || '',
+      HistoricalSignificance: itinerary.HistoricalSignificance || '',
       Itineraries: [],
     };
     destination.Itineraries.push(itinerary);
@@ -125,6 +135,9 @@ export default function AboutPage({ itineraries, loading, error }) {
                     <p className="eyebrow">
                       {destination.Itineraries.length} {destination.Itineraries.length === 1 ? 'TOUR' : 'TOURS'} · ROUTE HIGHLIGHTS
                     </p>
+                    {destination.HistoricalSignificance && (
+                      <p className="guide-destination-summary">{destination.HistoricalSignificance}</p>
+                    )}
                     <p className="guide-destination-tip">
                       <strong>Travel tip:</strong> {destinationTips[destination.CityName] || 'Check the route stops and local opening hours before setting out.'}
                     </p>
@@ -157,6 +170,30 @@ export default function AboutPage({ itineraries, loading, error }) {
             </details>
           ))}
         </div>
+      </section>
+
+      <section className="guide-section photo-credits-section" id="photo-credits" aria-labelledby="photo-credits-title">
+        <div className="guide-section-heading">
+          <p className="eyebrow">OPEN IMAGE SOURCES</p>
+          <h2 id="photo-credits-title">Landmark photo credits.</h2>
+          <p>Photographs are stored locally for this site. Each credit links to its source and license.</p>
+        </div>
+        <details className="guide-faq photo-credits-details">
+          <summary>View {photoCredits.length} photo credits</summary>
+          <ul className="photo-credit-list">
+            {photoCredits.map((photo) => (
+              <li key={photo.landmarkId}>
+                <strong>{photo.landmark} · {photo.city}</strong>
+                <span>
+                  Photo by {photo.author} ·{' '}
+                  <a href={photo.sourceUrl} target="_blank" rel="noreferrer">Wikimedia Commons</a>
+                  {' '}·{' '}
+                  <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.license}</a>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </details>
       </section>
 
       <section className="about-cta">

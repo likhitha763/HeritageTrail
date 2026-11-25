@@ -1,3 +1,5 @@
+import { getDestinationLandmarkArtwork } from './landmarkArtwork.js';
+
 const artworkByItinerary = {
   1: {
     src: '/images/mangaluru-city.jpg',
@@ -57,5 +59,5 @@ export function getWalkArtwork(itineraryId) {
 }
 
 export function getDestinationArtwork(cityName) {
-  return artworkByDestination[cityName] || null;
+  return artworkByDestination[cityName] || getDestinationLandmarkArtwork(cityName);
 }

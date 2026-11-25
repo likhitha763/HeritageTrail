@@ -4,12 +4,20 @@ import { getDestinationArtwork } from '../data/walkArtwork.js';
 
 const destinationCaptions = {
   Agra: 'Marble monuments, riverside gardens, and Mughal stories.',
+  Ahmedabad: 'Stepwells, carved stonework, and stories along the Sabarmati.',
+  Amritsar: 'Sikh heritage and powerful stories of shared history.',
+  Bengaluru: 'Palaces, gardens, and the stories of an evolving city.',
+  Chennai: 'Tamil temple traditions and a long-standing coastal culture.',
   Delhi: 'Layer upon layer of living history in India’s capital.',
   Hampi: 'Temple roads and the monumental ruins of Vijayanagara.',
+  Hyderabad: 'Deccan forts, palaces, and the lanes of the old city.',
   Jaipur: 'A rose-coloured city of palaces, forts, and astronomy.',
+  Kolkata: 'Riverfront landmarks and the city’s literary heritage.',
   Kochi: 'A historic harbour shaped by centuries of sea trade.',
   Mangaluru: 'Coastal heritage where many traditions meet.',
+  Mumbai: 'Harbour landmarks and the architecture of a historic port.',
   Mysuru: 'Royal architecture, fragrant markets, and hilltop shrines.',
+  Puri: 'Temple traditions and coastal life on the Bay of Bengal.',
   Varanasi: 'Ancient lanes and timeless life along the Ganges.',
 };
 

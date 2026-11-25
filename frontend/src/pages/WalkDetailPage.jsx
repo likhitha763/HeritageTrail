@@ -82,8 +82,8 @@ export default function WalkDetailPage({ itineraries, loading }) {
         <div>
           <p className="eyebrow">CIRCUIT SYNOPSIS</p>
           <p>
-            Follow a carefully ordered route through {itinerary.CityName}, from its earliest associations
-            to the civic and spiritual landmarks that shape the city today.
+            {itinerary.HistoricalSignificance
+              || `Follow a carefully ordered route through ${itinerary.CityName}, from its earliest associations to the landmarks that shape the city today.`}
           </p>
         </div>
         <div className="trivia-facts" aria-label="Trivia facts">

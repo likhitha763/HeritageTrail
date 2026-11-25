@@ -21,8 +21,8 @@ In MySQL Workbench:
 1. Open schema.sql and click the lightning bolt to run it.
 2. Wait for it to finish. It creates the database tables, travel modes,
    stored procedure, and triggers.
-3. Open seed.sql and run it. It adds eight Indian cities, their landmarks,
-   eighteen tours, route stops, travel options, and sample bookings.
+3. Open seed.sql and run it. It adds sixteen Indian cities, 85 landmarks,
+   twenty-six tours, route stops, travel options, and sample bookings.
 4. In a new query tab, run the checks in section 5.
 
 Run schema.sql before seed.sql because the sample rows need the tables to
@@ -92,8 +92,9 @@ no old-database migration blocks in this beginner setup.
 4. HOW A VISITOR BOOKS A TOUR
 -----------------------------
 
-1. The visitor opens Explore Tours. The frontend asks the API for available
-   itineraries and travel options.
+1. The visitor opens Explore Tours. Search can match a city, state, tour,
+   historical summary, or landmark name and description. The frontend asks
+   the API for available itineraries and travel options.
 2. The visitor opens a tour. The API calls GetItineraryDetails to get its
    active stops in StopOrder.
 3. The visitor chooses a travel option, date, group size, and enters their
@@ -136,9 +137,10 @@ List the sample bookings:
   SELECT CustomerName, TravelDate, FinalPrice
   FROM Bookings;
 
-The first query should show eighteen tours. The city query should show
-Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, and Kochi. The procedure
-should return the ordered stops for Mangaluru Heritage Highlights. The
+The first query should show twenty-six tours. The city query should show
+Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, Kochi, Mumbai,
+Kolkata, Chennai, Hyderabad, Ahmedabad, Amritsar, Bengaluru, and Puri. The
+procedure should return the ordered stops for Mangaluru Heritage Highlights. The
 last query should show the two sample bookings.
 
 

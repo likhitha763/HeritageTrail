@@ -89,6 +89,7 @@ BEGIN
         Itineraries.Title AS ItineraryName,
         Itineraries.DurationHours,
         Itinerary_Stops.StopOrder,
+        Landmarks.LandmarkID,
         Landmarks.Name AS LandmarkName,
         Landmarks.Description AS LandmarkDescription,
         Cities.Name AS CityName,

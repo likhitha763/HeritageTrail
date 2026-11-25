@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getItineraryDetails } from '../api.js';
+import { getLandmarkArtwork } from '../data/landmarkArtwork.js';
+import { getDestinationArtwork } from '../data/walkArtwork.js';
 
 export default function Timeline({ itinerary }) {
   const [stops, setStops] = useState([]);
@@ -45,19 +47,38 @@ export default function Timeline({ itinerary }) {
         <p className="notice">No stops are linked to this walk yet. Run the updated seed script in MySQL Workbench.</p>
       ) : (
         <ol className="timeline">
-          {stops.map((stop) => (
-            <li className="timeline-stop" key={`${stop.StopOrder}-${stop.LandmarkName}`}>
-              <span className="timeline-marker">{String(stop.StopOrder).padStart(2, '0')}</span>
-              <div className="stop-content">
-                <p className="stop-city">{stop.CityName} · {itinerary.State}</p>
-                <h3>{stop.LandmarkName}</h3>
-                {stop.LandmarkDescription && <p className="stop-description">{stop.LandmarkDescription}</p>}
-                <p className="stop-meta">
-                  {stop.EntryFee > 0 ? `Entry ₹${Number(stop.EntryFee).toFixed(2)}` : 'Free entry'}
-                </p>
-              </div>
-            </li>
-          ))}
+          {stops.map((stop) => {
+            const landmarkPhoto = getLandmarkArtwork(stop.LandmarkID);
+            const artwork = landmarkPhoto || getDestinationArtwork(stop.CityName);
+            const imageAlt = landmarkPhoto
+              ? landmarkPhoto.alt
+              : `Representative view of ${stop.CityName}; ${stop.LandmarkName} is on this route`;
+
+            return (
+              <li className="timeline-stop" key={`${stop.StopOrder}-${stop.LandmarkName}`}>
+                <span className="timeline-marker">{String(stop.StopOrder).padStart(2, '0')}</span>
+                <div className="stop-content">
+                  <div className="stop-copy">
+                    <p className="stop-city">{stop.CityName} · {itinerary.State}</p>
+                    <h3>{stop.LandmarkName}</h3>
+                    {stop.LandmarkDescription && <p className="stop-description">{stop.LandmarkDescription}</p>}
+                    <p className="stop-meta">
+                      {stop.EntryFee > 0 ? `Entry ₹${Number(stop.EntryFee).toFixed(2)}` : 'Free entry'}
+                    </p>
+                  </div>
+                  {artwork && (
+                    <img
+                      className="stop-photo"
+                      src={artwork.src}
+                      alt={imageAlt}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                </div>
+              </li>
+            );
+          })}
         </ol>
       )}
     </section>

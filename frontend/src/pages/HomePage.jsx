@@ -27,7 +27,7 @@ export default function HomePage({ itineraries, loading, error }) {
           className="home-hero-image"
           src="/images/mangaluru-city.jpg"
           alt="View over the rooftops and streets of Mangaluru"
-          fetchPriority="high"
+          fetchpriority="high"
         />
         <div className="hero-image-shade" aria-hidden="true" />
         <div className="hero-texture" aria-hidden="true" />

@@ -34,7 +34,9 @@ app.get('/api/itineraries', async (req, res, next) => {
     );
 
     const [cityRows] = await pool.execute(
-      `SELECT Itinerary_Stops.ItineraryID, Cities.Name AS CityName, Cities.State
+      `SELECT Itinerary_Stops.ItineraryID, Cities.Name AS CityName, Cities.State,
+              Cities.HistoricalSignificance, Landmarks.Name AS LandmarkName,
+              Landmarks.Description AS LandmarkDescription
        FROM Itinerary_Stops
        JOIN Itineraries ON Itineraries.ItineraryID = Itinerary_Stops.ItineraryID
        JOIN Landmarks ON Landmarks.LandmarkID = Itinerary_Stops.LandmarkID
@@ -51,8 +53,12 @@ app.get('/api/itineraries', async (req, res, next) => {
         cityByItineraryId.set(row.ItineraryID, {
           CityName: row.CityName,
           State: row.State,
+          HistoricalSignificance: row.HistoricalSignificance,
+          SearchTerms: [],
         });
       }
+      const city = cityByItineraryId.get(row.ItineraryID);
+      city.SearchTerms.push(row.LandmarkName, row.LandmarkDescription);
     }
 
     const itinerariesById = new Map();
@@ -67,6 +73,8 @@ app.get('/api/itineraries', async (req, res, next) => {
           DurationHours: row.DurationHours,
           CityName: city?.CityName || 'India',
           State: city?.State || '',
+          HistoricalSignificance: city?.HistoricalSignificance || '',
+          SearchText: city?.SearchTerms.join(' ') || '',
           Modes: [],
         };
         itinerariesById.set(row.ItineraryID, itinerary);

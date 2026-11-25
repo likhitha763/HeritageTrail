@@ -27,8 +27,12 @@ function SiteHeader() {
         <button className="country-select" type="button" aria-label="Select country">
           <span aria-hidden="true">●</span> All Cities <span aria-hidden="true">⌄</span>
         </button>
-        <button className="header-search" type="button" aria-label="Search tours">⌕</button>
-        <Link className="header-cta" to="/bookings">Book a walk <span aria-hidden="true">↗</span></Link>
+        <Link className="header-search" to="/tours#tour-search" aria-label="Search destinations">⌕</Link>
+        <Link className="header-cta" to="/bookings" aria-label="Book a walk">
+          <span className="header-cta-full">Book a walk</span>
+          <span className="header-cta-short" aria-hidden="true">Book</span>
+          <span aria-hidden="true">↗</span>
+        </Link>
         <span className="header-profile" aria-label="Guest profile">G</span>
       </div>
     </header>
@@ -61,6 +65,7 @@ function SiteFooter() {
           <Link to="/about">Before you go</Link>
           <Link to="/tours">Popular destinations</Link>
           <Link to="/bookings">View your itinerary</Link>
+          <Link to="/about#photo-credits">Landmark photo credits</Link>
         </nav>
 
         <div className="footer-column footer-about">
