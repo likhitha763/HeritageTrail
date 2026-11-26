@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import IndiaPlaceDiscovery from '../components/IndiaPlaceDiscovery.jsx';
 import ItineraryCatalog from '../components/ItineraryCatalog.jsx';
 import SwarmCursor from '../components/SwarmCursor.jsx';
 
@@ -52,6 +53,15 @@ export default function WalksPage({ itineraries, loading, error }) {
     return matching;
   }, [city, duration, itineraries, query, sortBy, travelMode]);
 
+  const hasTourQueryMatch = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return itineraries.some((itinerary) => !normalizedQuery
+      || `${itinerary.Title} ${itinerary.CityName} ${itinerary.State} ${itinerary.HistoricalSignificance} ${itinerary.SearchText}`
+        .toLowerCase()
+        .includes(normalizedQuery));
+  }, [itineraries, query]);
+  const shouldDiscoverPlace = city === 'all' && query.trim().length >= 3 && !hasTourQueryMatch;
+
   function selectCity(cityName) {
     const nextParams = new URLSearchParams(searchParams);
     if (cityName === 'all') {
@@ -94,8 +104,8 @@ export default function WalksPage({ itineraries, loading, error }) {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search a city, state, tour or story"
-                aria-label="Search cities, states, tours, or stories"
+                placeholder="Search any Indian place, city, tour, or story"
+                aria-label="Search Indian places, cities, tours, or stories"
               />
             </label>
             <label className="filter-select">
@@ -141,22 +151,36 @@ export default function WalksPage({ itineraries, loading, error }) {
           {filteredItineraries.length > 0 ? (
             <ItineraryCatalog itineraries={filteredItineraries} />
           ) : (
-            <div className="empty-state filter-empty">
-              <p className="eyebrow">NO MATCHING WALKS</p>
-              <h2>Try a different city, search, or duration.</h2>
-              <button
-                className="text-button"
-                type="button"
-                onClick={() => {
-                  setQuery('');
-                  setSearchParams(new URLSearchParams());
-                  setDuration('all');
-                  setTravelMode('all');
-                }}
-              >
-                Clear filters <span aria-hidden="true">↗</span>
-              </button>
-            </div>
+            <>
+              <div className="empty-state filter-empty">
+                <p className="eyebrow">
+                  {shouldDiscoverPlace ? 'NO BOOKABLE TOUR MATCHES' : 'NO MATCHING WALKS'}
+                </p>
+                <h2>
+                  {shouldDiscoverPlace
+                    ? `Looking beyond our tour list for “${query.trim()}”.`
+                    : 'Try a different city, search, or duration.'}
+                </h2>
+                {shouldDiscoverPlace && (
+                  <p>Places discovered below are for information only; only listed tours can be booked.</p>
+                )}
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={() => {
+                    setQuery('');
+                    setSearchParams(new URLSearchParams());
+                    setDuration('all');
+                    setTravelMode('all');
+                  }}
+                >
+                  Clear filters <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+              {shouldDiscoverPlace && (
+                <IndiaPlaceDiscovery query={query.trim()} />
+              )}
+            </>
           )}
         </>
       )}

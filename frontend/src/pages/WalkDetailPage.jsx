@@ -1,11 +1,15 @@
 import { Link, useParams } from 'react-router-dom';
 import BookingForm from '../components/BookingForm.jsx';
+import DestinationRecommendations from '../components/DestinationRecommendations.jsx';
+import RouteDayPlanner from '../components/RouteDayPlanner.jsx';
 import Timeline from '../components/Timeline.jsx';
+import useItineraryStops from '../hooks/useItineraryStops.js';
 import { getDestinationArtwork, getWalkArtwork } from '../data/walkArtwork.js';
 
 export default function WalkDetailPage({ itineraries, loading }) {
   const { id } = useParams();
   const itinerary = itineraries.find((item) => String(item.ItineraryID) === id);
+  const route = useItineraryStops(itinerary?.ItineraryID);
 
   if (loading) {
     return <main className="page-content"><p className="notice">Finding this walk…</p></main>;
@@ -97,31 +101,24 @@ export default function WalkDetailPage({ itineraries, loading }) {
       </section>
 
       <div className="detail-layout">
-        <Timeline itinerary={itinerary} />
+        <Timeline
+          itinerary={itinerary}
+          stops={route.stops}
+          loading={route.loading}
+          error={route.error}
+        />
         <BookingForm itinerary={itinerary} />
       </div>
 
-      <section className="detail-route-map">
-        <div className="route-map-heading">
-          <p className="eyebrow">TOPOGRAPHIC ROUTE MAP</p>
-          <span>GPS ACTIVE · MAIN CIRCUIT · {itinerary.State.toUpperCase()}</span>
-        </div>
-        <div className="route-map-visual" aria-label={`Map reference for ${itinerary.CityName}`}>
-          <div className="map-road map-road-one" />
-          <div className="map-road map-road-two" />
-          <div className="map-river" />
-          {['01', '02', '03', '04', '05'].map((point, index) => (
-            <span
-              className={`map-point map-point-${index + 1}`}
-              key={point}
-              aria-label={`Route stop ${point}`}
-            >
-              {point}
-            </span>
-          ))}
-          <strong>{itinerary.CityName}</strong>
-        </div>
-      </section>
+      {!route.loading && !route.error && route.stops.length > 0 && (
+        <RouteDayPlanner
+          key={itinerary.ItineraryID}
+          itinerary={itinerary}
+          stops={route.stops}
+        />
+      )}
+
+      <DestinationRecommendations cityName={itinerary.CityName} state={itinerary.State} />
 
       <section className="route-logistics">
         <div className="logistics-heading">

@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "concurrently --kill-others --names API,WEB \"npm start\" \"npm --prefix frontend run dev\"",
+    "dev": "concurrently --restart-tries -1 --restart-after 1000 --names API,WEB \"npm start\" \"npm --prefix frontend run dev\"",
     "check": "node --check index.js"
   },
   "dependencies": {

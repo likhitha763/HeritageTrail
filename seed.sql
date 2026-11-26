@@ -18,7 +18,13 @@ VALUES
     (13, 'Ahmedabad', 'Gujarat', 'A historic city on the Sabarmati River known for its walled-city neighbourhoods, stepwells, and textile heritage.'),
     (14, 'Amritsar', 'Punjab', 'A major centre of Sikh heritage whose history also preserves important stories of shared life and partition.'),
     (15, 'Bengaluru', 'Karnataka', 'A city of old market neighbourhoods, royal sites, gardens, and a later role as a centre of technology.'),
-    (16, 'Puri', 'Odisha', 'A coastal pilgrimage city known for Jagannath traditions, temple architecture, and its place in Odia culture.')
+    (16, 'Puri', 'Odisha', 'A coastal pilgrimage city known for Jagannath traditions, temple architecture, and its place in Odia culture.'),
+    (17, 'Udaipur', 'Rajasthan', 'A Mewar-era city around Lake Pichola, known for palace architecture, historic neighbourhoods, and lakeside traditions.'),
+    (18, 'Jodhpur', 'Rajasthan', 'A historic Marwar city known for Mehrangarh Fort and the blue-painted lanes of its old city.'),
+    (19, 'Lucknow', 'Uttar Pradesh', 'A city shaped by Awadh and Nawabi history, celebrated for its architecture, crafts, and food traditions.'),
+    (20, 'Khajuraho', 'Madhya Pradesh', 'A town known for medieval Hindu and Jain temples with intricate stone sculpture.'),
+    (21, 'Panaji', 'Goa', 'Goa''s riverside capital, known for its Latin Quarter, historic churches, and Mandovi waterfront.'),
+    (22, 'Madurai', 'Tamil Nadu', 'An ancient Tamil city centred on Meenakshi Amman Temple and its distinctive Dravidian architecture.')
 ON DUPLICATE KEY UPDATE
     Name = VALUES(Name),
     State = VALUES(State),
@@ -112,7 +118,31 @@ VALUES
     (82, 16, 'Jagannath Temple, Puri', 'A major Hindu pilgrimage temple and the centre of Puri''s annual Rath Yatra tradition.', 0.00),
     (83, 16, 'Gundicha Temple', 'A temple connected with the annual Rath Yatra, when the deities travel from the Jagannath Temple.', 0.00),
     (84, 16, 'Narendra Tank', 'A historic temple tank used for religious ceremonies and festivals in Puri.', 0.00),
-    (85, 16, 'Puri Beach', 'A public shoreline that is part of Puri''s coastal life and pilgrimage landscape.', 0.00)
+    (85, 16, 'Puri Beach', 'A public shoreline that is part of Puri''s coastal life and pilgrimage landscape.', 0.00),
+    (86, 17, 'City Palace, Udaipur', 'A palace complex overlooking Lake Pichola that reflects the history of the Mewar rulers.', 300.00),
+    (87, 17, 'Jagdish Temple', 'A prominent Hindu temple in Udaipur''s old city, known for its carved stone architecture.', 0.00),
+    (88, 17, 'Bagore Ki Haveli', 'A historic haveli beside Lake Pichola with exhibits on Mewar art and domestic life.', 60.00),
+    (89, 17, 'Saheliyon Ki Bari', 'A historic garden with fountains and pavilions, created for the royal household.', 30.00),
+    (90, 18, 'Mehrangarh Fort', 'A hilltop fort above Jodhpur, with palaces and collections documenting the history of Marwar.', 100.00),
+    (91, 18, 'Jaswant Thada', 'A marble memorial near Mehrangarh Fort, built in memory of Maharaja Jaswant Singh II.', 30.00),
+    (92, 18, 'Toorji Ka Jhalra', 'An eighteenth-century stepwell restored in Jodhpur''s historic old city.', 0.00),
+    (93, 18, 'Clock Tower and Sardar Market', 'A busy old-city market area centred on Jodhpur''s landmark clock tower.', 0.00),
+    (94, 19, 'Bara Imambara', 'An eighteenth-century complex in Lucknow built under Nawab Asaf-ud-Daula, known for its central hall.', 50.00),
+    (95, 19, 'Rumi Darwaza', 'An ornate eighteenth-century gateway and one of the best-known symbols of Lucknow.', 0.00),
+    (96, 19, 'Chota Imambara', 'A historic complex commissioned by Muhammad Ali Shah, with ornate interiors and surrounding structures.', 50.00),
+    (97, 19, 'The Residency, Lucknow', 'The remains of a British Residency associated with the 1857 uprising and its siege.', 25.00),
+    (98, 20, 'Lakshmana Temple, Khajuraho', 'A tenth-century Hindu temple in Khajuraho''s Western Group, dedicated to Vaikuntha Vishnu.', 0.00),
+    (99, 20, 'Kandariya Mahadeva Temple', 'A major temple in Khajuraho''s Western Group, renowned for its detailed stone sculpture.', 40.00),
+    (100, 20, 'Devi Jagdambi Temple', 'A temple in Khajuraho''s Western Group, noted for its sculptural decoration.', 0.00),
+    (101, 20, 'Parshvanatha Temple', 'A historic Jain temple in Khajuraho''s Eastern Group, known for its carved exterior.', 0.00),
+    (102, 21, 'Our Lady of the Immaculate Conception Church, Panaji', 'A landmark church above Panaji''s central square, known for its broad zigzagging staircase.', 0.00),
+    (103, 21, 'Fontainhas Latin Quarter', 'A historic neighbourhood of narrow lanes and colourful homes reflecting Panaji''s Indo-Portuguese heritage.', 0.00),
+    (104, 21, 'Goa State Museum', 'A museum in Panaji with collections on Goa''s art, history, and cultural traditions.', 0.00),
+    (105, 21, 'Miramar Beach', 'A public beach at the mouth of the Mandovi River, close to central Panaji.', 0.00),
+    (106, 22, 'Meenakshi Amman Temple', 'A major temple complex in Madurai dedicated to Meenakshi and Sundareshwarar.', 0.00),
+    (107, 22, 'Thirumalai Nayak Palace', 'A seventeenth-century palace in Madurai known for its monumental arches and courtyard.', 50.00),
+    (108, 22, 'Gandhi Memorial Museum, Madurai', 'A museum documenting India''s independence movement and Mahatma Gandhi''s life.', 0.00),
+    (109, 22, 'Vandiyur Mariamman Teppakulam', 'A large temple tank in Madurai associated with the Mariamman temple and float festival.', 0.00)
 ON DUPLICATE KEY UPDATE
     CityID = VALUES(CityID),
     Name = VALUES(Name),
@@ -148,7 +178,13 @@ VALUES
     (23, 'Ahmedabad Walled City & Sabarmati', 650.00, 4),
     (24, 'Amritsar Sacred & Shared History', 650.00, 4),
     (25, 'Bengaluru Palaces & Gardens', 700.00, 4),
-    (26, 'Puri Temple & Coastal Heritage', 600.00, 4)
+    (26, 'Puri Temple & Coastal Heritage', 600.00, 4),
+    (27, 'Udaipur Palace & Old City Heritage', 700.00, 5),
+    (28, 'Jodhpur Fort & Blue City Walk', 750.00, 5),
+    (29, 'Lucknow Nawabi Heritage Circuit', 650.00, 4),
+    (30, 'Khajuraho Temple Art Trail', 700.00, 4),
+    (31, 'Panaji Latin Quarter & Coast', 550.00, 4),
+    (32, 'Madurai Temple & Heritage Circuit', 650.00, 4)
 ON DUPLICATE KEY UPDATE
     Title = VALUES(Title),
     BasePrice = VALUES(BasePrice),
@@ -183,13 +219,19 @@ VALUES
     (23, 1, 20), (23, 2, 8), (23, 3, 30),
     (24, 1, 20), (24, 2, 8), (24, 3, 30),
     (25, 1, 20), (25, 2, 8), (25, 3, 30),
-    (26, 1, 20), (26, 2, 8), (26, 3, 30)
+    (26, 1, 20), (26, 2, 8), (26, 3, 30),
+    (27, 1, 20), (27, 2, 8), (27, 3, 30),
+    (28, 1, 20), (28, 2, 8), (28, 3, 30),
+    (29, 1, 20), (29, 2, 8), (29, 3, 30),
+    (30, 1, 20), (30, 2, 8), (30, 3, 30),
+    (31, 1, 20), (31, 2, 8), (31, 3, 30),
+    (32, 1, 20), (32, 2, 8), (32, 3, 30)
 ON DUPLICATE KEY UPDATE
     CapacityLimit = VALUES(CapacityLimit),
     IsActive = TRUE;
 
 DELETE FROM Itinerary_Stops
-WHERE ItineraryID BETWEEN 1 AND 26;
+WHERE ItineraryID BETWEEN 1 AND 32;
 
 INSERT INTO Itinerary_Stops
     (ItineraryID, LandmarkID, StopOrder)
@@ -220,7 +262,13 @@ VALUES
     (23, 70, 1), (23, 71, 2), (23, 72, 3), (23, 73, 4),
     (24, 74, 1), (24, 75, 2), (24, 76, 3), (24, 77, 4),
     (25, 78, 1), (25, 79, 2), (25, 80, 3), (25, 81, 4),
-    (26, 82, 1), (26, 83, 2), (26, 84, 3), (26, 85, 4);
+    (26, 82, 1), (26, 83, 2), (26, 84, 3), (26, 85, 4),
+    (27, 86, 1), (27, 87, 2), (27, 88, 3), (27, 89, 4),
+    (28, 90, 1), (28, 91, 2), (28, 92, 3), (28, 93, 4),
+    (29, 94, 1), (29, 95, 2), (29, 96, 3), (29, 97, 4),
+    (30, 98, 1), (30, 99, 2), (30, 100, 3), (30, 101, 4),
+    (31, 102, 1), (31, 103, 2), (31, 104, 3), (31, 105, 4),
+    (32, 106, 1), (32, 107, 2), (32, 108, 3), (32, 109, 4);
 
 INSERT INTO Bookings
     (BookingID, CustomerName, CustomerEmail, ItineraryID, TourModeID,

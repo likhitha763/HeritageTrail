@@ -7,18 +7,71 @@ const mysql = require('mysql2/promise');
 const app = express();
 const port = Number(process.env.PORT || 3001);
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || '127.0.0.1',
   port: Number(process.env.DB_PORT || 3306),
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'HeritageWalks',
+  connectTimeout: 10000,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
+const databaseConnectionErrors = new Set([
+  'ECONNREFUSED',
+  'ECONNRESET',
+  'ETIMEDOUT',
+  'EHOSTUNREACH',
+  'ENETUNREACH',
+  'PROTOCOL_CONNECTION_LOST',
+  'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR',
+  'ER_CON_COUNT_ERROR',
+  'ER_SERVER_SHUTDOWN',
+]);
 
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173' }));
 app.use(express.json());
+
+app.get('/api/health', async (req, res, next) => {
+  try {
+    await pool.query('SELECT 1');
+    res.json({ status: 'ok', database: 'connected' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/cities/:cityName/landmarks', async (req, res, next) => {
+  const cityName = typeof req.params.cityName === 'string' ? req.params.cityName.trim() : '';
+  if (!cityName || cityName.length > 100) {
+    return res.status(400).json({ error: 'A valid city name is required.' });
+  }
+
+  try {
+    const [rows] = await pool.execute(
+      `SELECT Landmarks.LandmarkID,
+              Landmarks.Name AS LandmarkName,
+              Landmarks.Description AS LandmarkDescription,
+              Cities.Name AS CityName,
+              Cities.State
+       FROM Cities
+       JOIN Landmarks ON Landmarks.CityID = Cities.CityID
+       WHERE Cities.Name = ?
+         AND Cities.IsActive = TRUE
+         AND Landmarks.IsActive = TRUE
+       ORDER BY Landmarks.Name, Landmarks.LandmarkID`,
+      [cityName]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'No active landmarks were found for this city.' });
+    }
+
+    res.json(rows);
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.get('/api/itineraries', async (req, res, next) => {
   try {
@@ -310,6 +363,11 @@ app.patch('/api/bookings/:id/payment', async (req, res, next) => {
 app.use((error, req, res, next) => {
   console.error(error);
 
+  if (databaseConnectionErrors.has(error.code)) {
+    return res.status(503).json({
+      error: 'MySQL is temporarily unavailable. The API will reconnect automatically; please retry shortly.',
+    });
+  }
   if (error.code === 'ER_SIGNAL_EXCEPTION') {
     return res.status(409).json({ error: error.sqlMessage || error.message });
   }
@@ -320,16 +378,40 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: 'An unexpected server error occurred.' });
 });
 
-async function startServer() {
-  const connection = await pool.getConnection();
-  connection.release();
+function delay(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
 
-  app.listen(port, () => {
+async function waitForDatabase() {
+  let retryDelay = 1000;
+  while (true) {
+    let connection;
+    try {
+      connection = await pool.getConnection();
+      await connection.ping();
+      console.log(`Connected to MySQL database "${process.env.DB_NAME || 'HeritageWalks'}".`);
+      return;
+    } catch (error) {
+      console.error(
+        `MySQL connection failed (${error.code || error.message}); retrying in ${retryDelay / 1000}s.`,
+      );
+      await delay(retryDelay);
+      retryDelay = Math.min(retryDelay * 2, 30000);
+    } finally {
+      if (connection) connection.release();
+    }
+  }
+}
+
+function startServer() {
+  const server = app.listen(port, () => {
     console.log(`HeritageTrails API listening on port ${port}`);
+    void waitForDatabase();
+  });
+  server.on('error', (error) => {
+    console.error(`Unable to start the HeritageTrails API on port ${port}.`, error);
+    process.exitCode = 1;
   });
 }
 
-startServer().catch((error) => {
-  console.error('Unable to start the API. Check the database configuration and connection.', error);
-  process.exitCode = 1;
-});
+startServer();

@@ -1,6 +1,6 @@
 # HeritageTrails — Multi-City Heritage-Walk Tour Planner 🏛️🚶‍♂️
 
-HeritageTrails is a database-backed planner for multi-stop cultural and historical tours. Visitors can choose walking, self-drive car, or tourist-bus options for the same heritage itinerary. Sample destinations include Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, Kochi, Mumbai, Kolkata, Chennai, Hyderabad, Ahmedabad, Amritsar, Bengaluru, and Puri.
+HeritageTrails is a database-backed planner for multi-stop cultural and historical tours. Visitors can choose walking, self-drive car, or tourist-bus options for the same heritage itinerary. Sample destinations include Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, Kochi, Mumbai, Kolkata, Chennai, Hyderabad, Ahmedabad, Amritsar, Bengaluru, Puri, Udaipur, Jodhpur, Lucknow, Khajuraho, Panaji, and Madurai.
 
 ## 📌 Project Overview
 The project manages cities, landmarks, sequential stops, transport modes, mode-specific capacities, and visitor bookings while maintaining database-level integrity.
@@ -9,7 +9,8 @@ This DBMS mini-project demonstrates relational modeling, normalization, stored p
 
 ## ✨ Key Features
 * **Multi-mode itineraries:** Offer walking, self-drive car, and tourist-bus options for a route.
-* **Multi-city discovery:** Browse sixteen Indian cities from destination cards, then filter or search tours by city, state, landmark, or place history.
+* **Multi-city discovery:** Browse twenty-two bookable Indian cities, then search beyond the tour catalog for place articles, credited reusable photos, and map links.
+* **Personal day planner:** Choose a curated route or plan independently, add your own places, and let additional time fit more city landmarks. Changing available hours recalculates the stops; changing start time shifts the schedule. Maps links help check live details.
 * **Ordered stops:** Link itineraries to landmarks through a bridge table and display them in sequence.
 * **Mode-specific capacity:** Count walking groups and bus seats as people; count self-drive capacity as vehicle slots.
 * **Booking and price integrity:** Store the selected mode and lock in the final booking price.
@@ -17,16 +18,18 @@ This DBMS mini-project demonstrates relational modeling, normalization, stored p
 
 Transport options describe how visitors can explore the itinerary; the app does not rent cars, dispatch vehicles, or sell fuel/transport services. Self-drive visitors arrange their own cars. The bus option tracks passenger-seat capacity, but does not manage a bus operator or vehicle fleet. Visitors choose one mode for the whole itinerary. Combining modes between individual landmarks is not currently modeled.
 
+The personal day planner can use a curated itinerary, build a self-guided plan from the city's active landmarks, or append independent landmarks and places added by the visitor when time allows. It recalculates the schedule when available hours, pace, interests, or added places change; start time shifts the clock but does not change the stops. Visits and transfers are planning estimates, not verified opening hours or live travel times. Only curated itinerary stops can be booked; independent places are suggestions. Confirm current hours and directions through the linked Maps searches before travelling.
+
 ## Route content and sample-price notes
 
-The sample routes were reviewed against public tour listings to improve stop coverage and avoid squeezing long, multi-site visits into short durations. The listings below are references, not guaranteed current rates:
+These public listings are reference points for route duration and inclusions, not guaranteed current rates or an exhaustive price survey of all 32 routes:
 
-| Destination and source | Published duration and route | Published price and inclusions |
-| --- | --- | --- |
-| [Fort Kochi Walk — Five Senses Tours](https://5senseswalks.com/tour/fort-kochi-walking-tour/) | 3 hours; Chinese fishing nets, Santa Cruz Basilica, St. Francis Church, Dutch Cemetery, Fort Kochi Beach, and spice market | ₹2,500 per person for groups of 4+; guide, entrance charges, and coffee |
-| [Varanasi Walking and Heritage Tour — The India Traveller review](https://theindiatraveller.com/varanasi-walking-and-heritage-tour/) | 3 hours; Manikarnika Ghat and the Kashi Vishwanath corridor, with additional nearby temple and market stops | From $13; the review describes a live guide, tea/coffee, and bottled water |
+| Destination and source | Published duration and route | Published price and inclusions | App base price |
+| --- | --- | --- | --- |
+| [Fort Kochi Walk — Five Senses Tours](https://5senseswalks.com/tour/fort-kochi-walking-tour/) | 3 hours; Chinese fishing nets, Santa Cruz Basilica, St. Francis Church, Dutch Cemetery, Fort Kochi Beach, and spice market | ₹2,500 per person for groups of 4+; guide, entrance charges, and coffee | ₹500 per person (Fort Kochi Waterfront & Heritage) |
+| [Varanasi Walking and Heritage Tour — The India Traveller review](https://theindiatraveller.com/varanasi-walking-and-heritage-tour/) | 3 hours; Manikarnika Ghat and the Kashi Vishwanath corridor, with additional nearby temple and market stops | From $13; the review describes a live guide, tea/coffee, and bottled water | ₹600 per person (Varanasi Ghats and Temples) |
 
-These are guided operator experiences and are not directly price-equivalent to this classroom app. Seed `BasePrice` values are illustrative per-person amounts; active landmark entry fees are added separately. The app does not include transport hire, fuel, or a dispatched operator, and sample prices are not live market quotes.
+These guided operator experiences are not directly price-equivalent to this classroom app: the app does not supply a guide, transport, fuel, or a dispatched operator, and it adds active landmark entry fees separately. The seed `BasePrice` values are illustrative per-person planner amounts, not market quotes. Since no like-for-like package is offered by the app, the comparison does not justify changing the 32 illustrative amounts; check live operator prices and inclusions before travel.
 
 ## 🛠️ Technology Stack
 * **Database:** MySQL 
@@ -36,7 +39,7 @@ These are guided operator experiences and are not directly price-equivalent to t
 
 ## Scenic imagery and effects
 
-The site uses locally stored photographs from Wikimedia Commons, not generated images. Destination cards and tour pages use locally stored destination photos; tour timelines show landmark-specific photos where available and a clearly labelled representative city image otherwise. Credits for the original destination images are below. Landmark photo sources and license links are also available in the Travel Guide and [landmarkPhotoCredits.json](./frontend/src/data/landmarkPhotoCredits.json).
+The site uses locally stored photographs from Wikimedia Commons, not generated images. Destination cards use city photos; tours in cities with multiple routes use distinct route-landmark artwork where credited photos are available. Tour timelines show landmark-specific photos where available and a clearly labelled representative city image otherwise. Credits for destination photos are also in [destinationPhotoCredits.json](./frontend/src/data/destinationPhotoCredits.json); landmark photo sources and license links are in the Travel Guide and [landmarkPhotoCredits.json](./frontend/src/data/landmarkPhotoCredits.json). When a tour search has no match, the discovery view searches Wikipedia articles and displays only reusable Commons photos with author and license links.
 
 | Local image | Source and author | License |
 | --- | --- | --- |
@@ -52,6 +55,12 @@ The site uses locally stored photographs from Wikimedia Commons, not generated i
 | `frontend/public/images/mysuru-palace.jpg` | [Mysuru Palace - East Side.jpg](https://commons.wikimedia.org/wiki/File:Mysuru_Palace_-_East_Side.jpg), Ingo Mehling | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
 | `frontend/public/images/varanasi-ghats.jpg` | [Varanasi 2010 ghats3.jpg](https://commons.wikimedia.org/wiki/File:Varanasi_2010_ghats3.jpg), Marcin Białek | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
 | `frontend/public/images/kochi-fishing-nets.jpg` | [Chinese Fishing Nets - 2.jpg](https://commons.wikimedia.org/wiki/File:Chinese_Fishing_Nets_-_2.jpg), Ingo Mehling | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| `frontend/public/images/udaipur-city-palace.jpg` | [City Palace, Udaipur](https://commons.wikimedia.org/wiki/File:20191207_City_Palace,_Udaipur,_1422_7187.jpg), Jakub Hałun | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| `frontend/public/images/jodhpur-mehrangarh-fort.jpg` | [Mehrangarh Fort, Jodhpur](https://commons.wikimedia.org/wiki/File:20191210_Mehrangarh_Fort,_Jodhpur_1016_7834.jpg), Jakub Hałun | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| `frontend/public/images/lucknow-bara-imambara.jpg` | [Bara Imambara, Lucknow](https://commons.wikimedia.org/wiki/File:Bara_Imambara,_Lucknow_2.jpg), Slyronit | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| `frontend/public/images/khajuraho-vishvanath-temple.jpg` | [Vishvanath Temple, Khajuraho](https://commons.wikimedia.org/wiki/File:0121821_Vishvanath_temple,_Khajuraho_Madhya_Pradesh_016.jpg), Ms Sarah Welch | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) |
+| `frontend/public/images/panaji-fontainhas.jpg` | [Streets of Fontainhas, Panaji](https://commons.wikimedia.org/wiki/File:Streets_of_Fontainhas,_Panaji_(02).jpg), iMahesh | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| `frontend/public/images/madurai-meenakshi-temple.jpg` | [Sri Meenakshi Devasthanam Temple](https://commons.wikimedia.org/wiki/File:Sri_Meenakshi_Devasthanam_Temple.jpg), Jim Evans (Pearland, Texas replica inspired by Madurai's temple) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
 
 Itinerary cards use a pointer-following spotlight inspired by React Bits' [SpotlightCard](https://reactbits.dev/animations/spotlight-card). The local implementation has no additional runtime dependency and respects the operating system's reduced-motion preference. The hero also has a slow image drift, while cards reveal and zoom gently on hover.
 
@@ -84,9 +93,9 @@ For a beginner-friendly explanation of the SQL and the full database-to-website 
 
 1. Use a new, empty `HeritageWalks` database. `schema.sql` creates the tables and database rules; it is not an upgrade script. If that database already has tables, choose another name and use it in both SQL files and the `DB_NAME` value in `.env`.
 2. Open `schema.sql` in MySQL Workbench and execute it.
-3. After it succeeds, open `seed.sql` and execute it. This loads sixteen cities, twenty-six itineraries, 85 landmarks, ordered stops, travel options, and sample bookings.
+3. After it succeeds, open `seed.sql` and execute it. This loads twenty-two cities, thirty-two itineraries, 109 landmarks, ordered stops, travel options, and sample bookings.
 
-Run `schema.sql` only once on an empty database. `seed.sql` can be run again to refresh the sample records; it owns city IDs `1`-`16`, landmark IDs `1`-`85`, itinerary IDs `1`-`26`, sample booking IDs `1` and `2`, and the stops for itineraries `1`-`26`. It deletes and rebuilds stops only for those sample itinerary IDs. Avoid using those IDs for custom records.
+Run `schema.sql` only once on an empty database. `seed.sql` can be run again to refresh the sample records; it owns city IDs `1`-`22`, landmark IDs `1`-`109`, itinerary IDs `1`-`32`, sample booking IDs `1` and `2`, and the stops for itineraries `1`-`32`. It deletes and rebuilds stops only for those sample itinerary IDs. Avoid using those IDs for custom records.
 
 ### 2. Configure and start the application
 
@@ -105,17 +114,21 @@ Node.js 18 or newer is recommended.
    Copy-Item .env.example .env
    ```
 4. Edit `.env` with your MySQL host, username, and password. Do not commit this file.
-5. Start both the API and frontend from this project folder in one terminal:
+5. Start both the API and frontend from the project root (the folder containing this `package.json`) in one terminal:
    ```bash
    npm run dev
    ```
 
-The API listens on `http://localhost:3001` by default and Vite usually serves the site at `http://localhost:5173`. Both server logs appear in the same terminal; press `Ctrl+C` to stop them. Set `CLIENT_ORIGIN` in `.env` to the React app's origin if it differs from the default Vite URL.
+This command supervises both processes and restarts either if it exits unexpectedly. The API stays available while MySQL starts and retries the database connection automatically. MySQL itself must be running; on Windows, check that the `MySQL80` service is running and set to Automatic. Do not start only the frontend with `npm --prefix frontend run dev`, because that command does not start the SQL-backed API.
+
+The API listens on `http://127.0.0.1:3001` by default and Vite serves the site at `http://127.0.0.1:5173`. Both server logs appear in the same terminal; press `Ctrl+C` to stop them. Set `CLIENT_ORIGIN` in `.env` to the React app's origin if it differs from the default Vite URL. `GET /api/health` reports whether the API can currently reach MySQL.
 
 ### API endpoints
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
+| `GET` | `/api/health` | Check API and MySQL connectivity |
+| `GET` | `/api/cities/:cityName/landmarks` | List active landmarks available for self-guided day planning |
 | `GET` | `/api/itineraries` | List active itineraries, destination history, searchable landmark details, offered modes, and capacities |
 | `GET` | `/api/itineraries/:id` | Get the active stop timeline from `GetItineraryDetails` |
 | `GET` | `/api/bookings?email=...` | Find active bookings associated with an email address |
@@ -141,7 +154,7 @@ Use the `TourModeID` from that itinerary's `Modes` array in the `GET /api/itiner
 
 Use **My bookings** in the header or footer to look up reservations by the email used while booking. The booking confirmation also links to the lookup page. This is a classroom demo without account sign-in or email verification, so anyone who knows an email address can look up bookings associated with it; add authentication or email verification before production use.
 
-The frontend includes Home, Explore Tours, Tour Details, My bookings, and Travel guide pages. Each detail page displays the full ordered stop timeline and lets visitors choose a supported travel mode before booking. The Vite development server proxies `/api` requests to the backend on port `3001`.
+The frontend includes Home, Explore Tours, Tour Details, My bookings, and Travel guide pages. The personal day planner offers curated and self-guided plans, scheduled city landmarks, custom visitor-added places, optional meal breaks, and Maps links. Each tour detail page displays the full ordered stop timeline and a suggested schedule. Google Maps provides live route distances and travel times; HeritageTrails does not verify opening hours. Visitors can also open nearby hotel and restaurant searches for destinations and stops. The Vite development server proxies `/api` requests to the backend on port `3001`.
 
 ## Manual verification
 
@@ -156,7 +169,7 @@ CALL GetItineraryDetails(1);
 SELECT CustomerName, TravelDate, FinalPrice FROM Bookings;
 ```
 
-The first query should return twenty-six routes. `CALL` should return the ordered stops for route 1. The last query should show the two sample bookings. In Explore Tours, searches can match a city, state, tour title, historical summary, or a landmark name and description.
+The first query should return thirty-two routes. `CALL` should return the ordered stops for route 1. The last query should show the two sample bookings. In Explore Tours, searches can match a city, state, tour title, historical summary, or a landmark name and description.
 
 ### API and frontend smoke test
 

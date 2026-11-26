@@ -1,0 +1,39 @@
+Work in the existing HeritageTrails project. Implement the improvements below in the current app—do not just provide a plan. First inspect the existing React/Vite frontend, Express API, MySQL schema and seed data, and follow the project’s current styling and coding patterns. Keep existing features working, make focused changes, and update the README and SQL guide where relevant.
+
+## 1. Add a DBMS Showcase page
+- Replace the current “Admin” navigation link (it currently opens the Travel Guide) with a “DBMS Showcase” link and add a real page/route for it.
+- Make the page useful for a classroom demo: explain the database-to-website booking flow, show the seven core tables and their relationships, and describe the primary/foreign keys and bridge tables.
+- Explain `GetItineraryDetails` as a stored procedure and both existing triggers: `PreventDuplicateLandmark` and `CheckCapacityConstraint`. Describe what each protects and how `SIGNAL SQLSTATE '45000'` becomes a booking error in the API.
+- Be technically precise about assertions: this project does not define a SQL `ASSERTION`, and MySQL does not support the standard `CREATE ASSERTION` syntax. Explain that the capacity trigger enforces a similar cross-row business rule. Explain that `CHECK` constraints apply to row-level rules where supported.
+- Explain the actual built-in SQL functions/expressions used here: `COUNT`, `SUM`, `COALESCE`, and `CASE`. Do not claim the project has a custom stored function.
+- Include short, accurate SQL examples based on this project. Make examples read-only or clearly label any insert that is intended only for a test database.
+
+## 2. Show availability for a selected date
+- On tour details, let the visitor select a date and show capacity used and remaining for each offered travel mode.
+- Add an API endpoint that returns availability for a given itinerary and valid date. Return mode ID/name, capacity unit, limit, used capacity, and remaining capacity.
+- Use the correct capacity unit: people/seats for walking and bus, vehicles for self-drive. Use SQL aggregation and handle no existing bookings correctly.
+- Refresh availability when the date or itinerary changes, and after a successful booking. Show loading, empty, and error states accessibly.
+- Treat availability as informational: the existing database trigger remains the final booking check, and the UI must display a clear message if a booking fails because capacity changed.
+
+## 3. Replace the pretend GPS map with an honest route visualization
+- Add latitude/longitude for landmarks and update the schema and seed data consistently.
+- Use credible coordinates. Do not invent coordinates or imply live GPS tracking. If reliable coordinates are unavailable for a landmark, handle that gracefully.
+- Plot each itinerary’s actual stops in `StopOrder` on a responsive, coordinate-based schematic with numbered markers and a connecting line. Label it clearly as a route schematic, not turn-by-turn directions or live GPS.
+- Remove the hard-coded five-stop markers and “GPS ACTIVE” copy. Make the visualization work for routes with different stop counts.
+
+## 4. Make demo-only features clear
+- Do not add real payment processing or collect payment credentials. Clearly label the existing payment status change as a simulated/demo payment everywhere it appears, including the modal and Travel Guide FAQ.
+- Label the generated QR-like graphic as illustrative/decorative, not scannable. Keep pass printing available.
+- Ensure all UI text accurately describes what the app does.
+
+## 5. Database integrity and documentation
+- Review whether suitable row-level `CHECK` constraints should be added for values such as positive group size and nonnegative vehicle count. Only add constraints supported by the project’s MySQL version and compatible with the existing seed data; keep mode-dependent and cross-row capacity rules in the trigger.
+- Consider a declarative unique constraint for duplicate itinerary/landmark pairs in addition to the existing trigger, if compatible with current seed data. Keep the trigger documented as a demo of trigger-based validation.
+- Update the README and `SQL_COMMANDS_EXPLAINED.txt` to cover the new availability and route visualization features, the DBMS Showcase, the demo-payment limitation, and the exact database concepts implemented. Keep setup instructions consistent with any schema/seed changes.
+- Do not create an unauthenticated admin interface or claim production-grade payment, GPS, or booking guarantees.
+
+## Validation
+- Add or update focused tests for the availability API, capacity-unit calculations, invalid dates, and route rendering with different stop counts, following the project’s existing test setup.
+- Run the existing backend checks and frontend production build. If MySQL-dependent tests cannot run in this environment, say so explicitly and provide the exact manual Workbench checks needed.
+- Do not run destructive SQL against an existing database. Keep schema/seed changes suitable for the documented fresh-database setup.
+- Report which files changed, what was implemented, and which validations passed or could not be run.

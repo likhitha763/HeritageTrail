@@ -1,35 +1,7 @@
-import { useEffect, useState } from 'react';
-import { getItineraryDetails } from '../api.js';
 import { getLandmarkArtwork } from '../data/landmarkArtwork.js';
 import { getDestinationArtwork } from '../data/walkArtwork.js';
 
-export default function Timeline({ itinerary }) {
-  const [stops, setStops] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError('');
-    setStops([]);
-
-    getItineraryDetails(itinerary.ItineraryID)
-      .then((items) => {
-        if (!cancelled) setStops(items);
-      })
-      .catch((requestError) => {
-        if (!cancelled) setError(requestError.message);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [itinerary.ItineraryID]);
-
+export default function Timeline({ itinerary, stops, loading, error }) {
   return (
     <section className="timeline-section">
       <div className="panel-heading">

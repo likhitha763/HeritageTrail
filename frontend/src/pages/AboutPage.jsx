@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
+import DestinationRecommendations from '../components/DestinationRecommendations.jsx';
 import { getDestinationArtwork } from '../data/walkArtwork.js';
+import destinationPhotoCredits from '../data/destinationPhotoCredits.json';
 import photoCredits from '../data/landmarkPhotoCredits.json';
 import SwarmCursor from '../components/SwarmCursor.jsx';
 
 const steps = [
-  ['01', 'Choose a destination', 'Search by city, state, landmark, or place history, then browse matching tours.'],
+  ['01', 'Choose a destination', 'Search across India or browse a destination with a curated, bookable tour.'],
   ['02', 'Pick a route', 'Review the tour length, base price, travel options, and the ordered stops before deciding.'],
   ['03', 'Choose how to travel', 'Select walking, self-drive, or a tourist bus when that option is offered for your tour.'],
   ['04', 'Reserve your place', 'Enter your name, email, travel date, and group size. Your booking is saved with payment pending.'],
@@ -13,7 +15,7 @@ const steps = [
 const faqs = [
   {
     question: 'Which destinations can I book?',
-    answer: 'The destination guide lists all bookable cities. Search also matches states, landmark names, and historical summaries for places with sample tours.',
+    answer: 'The destination guide lists bookable cities. If a place has no curated tour, search can still show discovery articles and reusable photos, but those results cannot be booked.',
   },
   {
     question: 'How is the tour price calculated?',
@@ -43,12 +45,18 @@ const destinationTips = {
   Hampi: 'The archaeological area is spread out and uneven; carry water and wear comfortable shoes.',
   Hyderabad: 'The old-city bazaar is busy; check fort and palace opening times before travelling.',
   Jaipur: 'Many heritage sights are outdoors; carry water and check fort opening hours before you go.',
-  Kolkata: 'Allow time for traffic between riverfront landmarks and the city centre.',
+  Jodhpur: 'Start early for the hilltop fort and allow time for the steep lanes in the old city.',
+  Khajuraho: 'Allow time to explore the temple groups at a respectful pace and check site hours before travelling.',
   Kochi: 'Allow time for transfers between the Fort Kochi waterfront and Mattancherry stops.',
+  Kolkata: 'Allow time for traffic between riverfront landmarks and the city centre.',
+  Lucknow: 'Check monument hours and allow extra time around the busy old-city gateways.',
+  Madurai: 'Plan for queues at the temple and dress respectfully at places of worship.',
   Mangaluru: 'Routes can combine waterfront and temple stops, so check opening times before setting out.',
   Mumbai: 'Check ferry schedules and allow time for security at major waterfront attractions.',
   Mysuru: 'Start early if you plan to combine palace, market, and hilltop stops.',
+  Panaji: 'Explore the old quarter on foot and allow extra time for coastal traffic.',
   Puri: 'Respect temple access rules; some places of worship have visitor restrictions.',
+  Udaipur: 'Check lake-boat schedules separately and allow time for the narrow lanes around the old city.',
   Varanasi: 'Old-city lanes and ghat steps can be uneven; comfortable footwear is useful.',
 };
 
@@ -74,7 +82,7 @@ export default function AboutPage({ itineraries, loading, error }) {
         <section className="page-intro guide-intro">
           <p className="eyebrow">TRAVEL GUIDE · INDIA</p>
           <h1>Plan a day of<br />local stories.</h1>
-          <p>Find a destination, choose a route that suits your pace, and see what to expect before you reserve.</p>
+          <p>Find a destination, choose a route that suits your pace, and explore nearby hotels and restaurants before you go.</p>
         </section>
       </SwarmCursor>
 
@@ -141,6 +149,11 @@ export default function AboutPage({ itineraries, loading, error }) {
                     <p className="guide-destination-tip">
                       <strong>Travel tip:</strong> {destinationTips[destination.CityName] || 'Check the route stops and local opening hours before setting out.'}
                     </p>
+                    <DestinationRecommendations
+                      cityName={destination.CityName}
+                      state={destination.State}
+                      compact
+                    />
                     <ul>
                       {destination.Itineraries.map((itinerary) => (
                         <li key={itinerary.ItineraryID}>
@@ -175,12 +188,24 @@ export default function AboutPage({ itineraries, loading, error }) {
       <section className="guide-section photo-credits-section" id="photo-credits" aria-labelledby="photo-credits-title">
         <div className="guide-section-heading">
           <p className="eyebrow">OPEN IMAGE SOURCES</p>
-          <h2 id="photo-credits-title">Landmark photo credits.</h2>
-          <p>Photographs are stored locally for this site. Each credit links to its source and license.</p>
+          <h2 id="photo-credits-title">Destination &amp; landmark photo credits.</h2>
+          <p>Locally stored destination and landmark photographs, with source and license details.</p>
         </div>
         <details className="guide-faq photo-credits-details">
-          <summary>View {photoCredits.length} photo credits</summary>
+          <summary>View {photoCredits.length + destinationPhotoCredits.length} photo credits</summary>
           <ul className="photo-credit-list">
+            {destinationPhotoCredits.map((photo) => (
+              <li key={photo.city}>
+                <strong>{photo.city} · {photo.caption ? 'illustrative image' : 'destination photo'}</strong>
+                <span>
+                  {photo.caption && <>{photo.caption} · </>}
+                  Photo by {photo.author} ·{' '}
+                  <a href={photo.sourceUrl} target="_blank" rel="noreferrer">Wikimedia Commons</a>
+                  {' '}·{' '}
+                  <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.license}</a>
+                </span>
+              </li>
+            ))}
             {photoCredits.map((photo) => (
               <li key={photo.landmarkId}>
                 <strong>{photo.landmark} · {photo.city}</strong>

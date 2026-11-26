@@ -1,0 +1,45 @@
+[
+  {
+    "city": "Udaipur",
+    "author": "Jakub Hałun",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:20191207_City_Palace,_Udaipur,_1422_7187.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  {
+    "city": "Jodhpur",
+    "author": "Jakub Hałun",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:20191210_Mehrangarh_Fort,_Jodhpur_1016_7834.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  {
+    "city": "Lucknow",
+    "author": "Slyronit",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bara_Imambara,_Lucknow_2.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  {
+    "city": "Khajuraho",
+    "author": "Ms Sarah Welch",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:0121821_Vishvanath_temple,_Khajuraho_Madhya_Pradesh_016.jpg",
+    "license": "CC0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  {
+    "city": "Panaji",
+    "author": "iMahesh",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streets_of_Fontainhas,_Panaji_(02).jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  {
+    "city": "Madurai",
+    "caption": "A Pearland, Texas replica inspired by Madurai’s Meenakshi Temple",
+    "author": "Jim Evans",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sri_Meenakshi_Devasthanam_Temple.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  }
+]

@@ -21,8 +21,8 @@ In MySQL Workbench:
 1. Open schema.sql and click the lightning bolt to run it.
 2. Wait for it to finish. It creates the database tables, travel modes,
    stored procedure, and triggers.
-3. Open seed.sql and run it. It adds sixteen Indian cities, 85 landmarks,
-   twenty-six tours, route stops, travel options, and sample bookings.
+3. Open seed.sql and run it. It adds twenty-two Indian cities, 109 landmarks,
+   thirty-two tours, route stops, travel options, and sample bookings.
 4. In a new query tab, run the checks in section 5.
 
 Run schema.sql before seed.sql because the sample rows need the tables to
@@ -137,7 +137,7 @@ List the sample bookings:
   SELECT CustomerName, TravelDate, FinalPrice
   FROM Bookings;
 
-The first query should show twenty-six tours. The city query should show
+The first query should show thirty-two tours. The city query should show
 Mangaluru, Delhi, Jaipur, Agra, Varanasi, Mysuru, Hampi, Kochi, Mumbai,
 Kolkata, Chennai, Hyderabad, Ahmedabad, Amritsar, Bengaluru, and Puri. The
 procedure should return the ordered stops for Mangaluru Heritage Highlights. The

@@ -5,6 +5,7 @@ import FallingFooterText from './components/FallingFooterText.jsx';
 import AboutPage from './pages/AboutPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import MyBookingsPage from './pages/MyBookingsPage.jsx';
+import PlanYourDayPage from './pages/PlanYourDayPage.jsx';
 import WalkDetailPage from './pages/WalkDetailPage.jsx';
 import WalksPage from './pages/WalksPage.jsx';
 
@@ -18,6 +19,7 @@ function SiteHeader() {
       <nav className="main-nav" aria-label="Main navigation">
         <NavLink to="/" end>Home</NavLink>
         <NavLink to="/tours">Explore Tours</NavLink>
+        <NavLink to="/plan">Plan Your Day</NavLink>
         <NavLink to="/walks/1">Heritage Detail</NavLink>
         <NavLink to="/bookings">My Bookings</NavLink>
         <NavLink to="/about">Travel Guide</NavLink>
@@ -156,6 +158,16 @@ export default function App() {
             path="/walks"
             element={
               <WalksPage
+                itineraries={itineraries}
+                loading={loading}
+                error={error}
+              />
+            }
+          />
+          <Route
+            path="/plan"
+            element={
+              <PlanYourDayPage
                 itineraries={itineraries}
                 loading={loading}
                 error={error}

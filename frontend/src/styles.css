@@ -2687,113 +2687,9 @@ body {
   line-height: 1.55;
 }
 
-.detail-route-map {
-  margin-top: 48px;
-  border: 1px solid rgba(130, 168, 190, 0.14);
-  background: rgba(13, 31, 47, 0.38);
-}
-
-.route-map-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 52px;
-  padding: 0 18px;
-  border-bottom: 1px solid rgba(130, 168, 190, 0.14);
-}
-
-.route-map-heading .eyebrow {
-  margin: 0;
-}
-
-.route-map-heading span {
-  color: #8196a4;
-  font-size: 0.48rem;
-  font-weight: 800;
-  letter-spacing: 0.09em;
-}
-
-.route-map-visual {
-  position: relative;
-  min-height: 280px;
-  overflow: hidden;
-  background:
-    linear-gradient(32deg, transparent 48%, rgba(91, 150, 171, 0.12) 49%, transparent 51%) 0 0 / 54px 54px,
-    linear-gradient(145deg, transparent 48%, rgba(91, 150, 171, 0.1) 49%, transparent 51%) 0 0 / 68px 68px,
-    linear-gradient(135deg, #d5e2e2 0%, #bcd0d3 100%);
-}
-
-.route-map-visual strong {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  color: #4d626b;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.2rem, 3vw, 2.2rem);
-  text-shadow: 0 1px rgba(255, 255, 255, 0.8);
-}
-
-.map-road,
-.map-river {
-  position: absolute;
-  border-radius: 999px;
-  transform-origin: center;
-}
-
-.map-road {
-  width: 68%;
-  height: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  background: #91a8aa;
-}
-
-.map-road-one {
-  left: 12%;
-  top: 43%;
-  transform: rotate(18deg);
-}
-
-.map-road-two {
-  left: 22%;
-  top: 61%;
-  transform: rotate(-34deg);
-}
-
-.map-river {
-  left: 68%;
-  top: -20%;
-  width: 35px;
-  height: 130%;
-  transform: rotate(12deg);
-  background: rgba(79, 154, 181, 0.42);
-}
-
-.map-point {
-  position: absolute;
-  z-index: 2;
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border: 2px solid white;
-  border-radius: 50%;
-  background: #9b7d43;
-  color: white;
-  box-shadow: 0 3px 12px rgba(37, 62, 69, 0.24);
-  font-size: 0.48rem;
-  font-weight: 800;
-}
-
-.map-point-1 { left: 13%; top: 38%; }
-.map-point-2 { left: 29%; top: 29%; }
-.map-point-3 { left: 46%; top: 44%; }
-.map-point-4 { left: 64%; top: 58%; }
-.map-point-5 { right: 11%; top: 27%; }
-
 @media (max-width: 1100px) {
-  .site-header .main-nav a:nth-child(3),
-  .site-header .main-nav a:nth-child(6) {
+  .site-header .main-nav a:nth-child(4),
+  .site-header .main-nav a:nth-child(7) {
     display: none;
   }
 
@@ -2968,6 +2864,187 @@ select:focus-visible { outline: 3px solid #55b4d1; }
   .app-shell { width: min(100% - 40px, 820px); }
   .footer-main { width: min(100% - 40px, 820px); }
   .footer-bottom { width: min(100% - 40px, 820px); }
+}
+
+.route-day-planner {
+  margin-top: 48px;
+  padding: 24px;
+  border: 1px solid rgba(130, 168, 190, 0.18);
+  background: rgba(13, 31, 47, 0.42);
+}
+
+.route-day-planner-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.route-day-planner-heading .eyebrow { margin: 0 0 8px; }
+
+.route-day-planner-heading h2 {
+  margin: 0;
+  color: #e9f0f3;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 500;
+}
+
+.route-day-planner-heading > div > p:last-child {
+  max-width: 600px;
+  margin: 8px 0 0;
+  color: #91a2ae;
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+.route-day-start,
+.route-day-mode {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 6px;
+  color: #b7c5ce;
+  font-size: 0.64rem;
+  font-weight: 600;
+}
+
+.route-day-start input,
+.route-day-mode select {
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid rgba(130, 168, 190, 0.24);
+  border-radius: 3px;
+  background: #111e2d;
+  color: #dfe8ee;
+  font: inherit;
+}
+
+.route-day-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  margin-top: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(130, 168, 190, 0.14);
+}
+
+.route-day-break-toggle {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 8px;
+  color: #b7c5ce;
+  font-size: 0.64rem;
+}
+
+.route-day-break-toggle input { accent-color: #62bdd3; }
+
+.route-day-directions {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  padding: 0 13px;
+  border: 1px solid rgba(208, 183, 120, 0.42);
+  background: rgba(208, 183, 120, 0.1);
+  color: #e5d19c;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.route-day-directions:hover,
+.route-day-directions:focus-visible {
+  border-color: #d0b778;
+  background: rgba(208, 183, 120, 0.18);
+}
+
+.route-day-estimate-note {
+  margin: 13px 0 0;
+  color: #8196a4;
+  font-size: 0.6rem;
+  line-height: 1.55;
+}
+
+.route-day-schedule {
+  display: grid;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.route-day-stop,
+.route-day-meal-break {
+  display: grid;
+  grid-template-columns: 110px 34px minmax(0, 1fr);
+  grid-template-areas: "time number copy";
+  gap: 12px;
+  padding: 17px 0;
+  border-top: 1px solid rgba(130, 168, 190, 0.12);
+}
+
+.route-day-time {
+  grid-area: time;
+  padding-top: 6px;
+  color: #b7c5ce;
+  font-size: 0.67rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.route-day-stop-number {
+  grid-area: number;
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  border: 1px solid rgba(208, 183, 120, 0.38);
+  border-radius: 50%;
+  color: #d0b778;
+  font-size: 0.59rem;
+  font-weight: 700;
+}
+
+.route-day-stop-copy { grid-area: copy; min-width: 0; }
+.route-day-stop-copy .eyebrow { margin: 0 0 5px; font-size: 0.52rem; }
+
+.route-day-stop-copy h3 {
+  margin: 0;
+  color: #e9f0f3;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.route-day-stop-copy > p:not(.eyebrow) {
+  margin: 5px 0 0;
+  color: #91a2ae;
+  font-size: 0.62rem;
+}
+
+.route-day-nearby-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 9px;
+}
+
+.route-day-stop-copy a {
+  color: #62bdd3;
+  font-size: 0.61rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.route-day-meal-break {
+  background: rgba(208, 183, 120, 0.045);
+}
+
+.route-day-meal-break .route-day-stop-number {
+  border-color: rgba(208, 183, 120, 0.6);
+  background: rgba(208, 183, 120, 0.12);
 }
 
 @media (max-width: 620px) {
@@ -3155,8 +3232,8 @@ body {
     gap: clamp(8px, 1vw, 14px);
   }
 
-  .site-header .main-nav a:nth-child(3),
-  .site-header .main-nav a:nth-child(6) {
+  .site-header .main-nav a:nth-child(4),
+  .site-header .main-nav a:nth-child(7) {
     display: none;
   }
 
@@ -3332,6 +3409,141 @@ body {
 .photo-credit-list span { color: #91a2ae; }
 .photo-credit-list a { color: #62bdd3; }
 
+.destination-recommendations {
+  margin-top: 48px;
+  padding: 26px 0;
+  border-block: 1px solid rgba(130, 168, 190, 0.16);
+}
+
+.destination-recommendations-heading .eyebrow {
+  margin: 0 0 8px;
+}
+
+.destination-recommendations-heading h2 {
+  margin: 0;
+  color: #e9f0f3;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.3rem, 2.8vw, 1.8rem);
+  font-weight: 500;
+}
+
+.destination-recommendations-heading > p:last-child {
+  margin: 8px 0 18px;
+  color: #91a2ae;
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
+
+.destination-recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.destination-recommendation-card {
+  display: flex;
+  min-width: 0;
+  min-height: 76px;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border: 1px solid rgba(130, 168, 190, 0.2);
+  background: rgba(13, 31, 47, 0.42);
+  color: #dfe8ee;
+  text-decoration: none;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.destination-recommendation-card:hover,
+.destination-recommendation-card:focus-visible {
+  border-color: #62bdd3;
+  background: rgba(22, 52, 72, 0.7);
+}
+
+.destination-recommendation-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border: 1px solid rgba(208, 183, 120, 0.32);
+  border-radius: 50%;
+  color: #d0b778;
+  font-size: 0.9rem;
+}
+
+.destination-recommendation-copy {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.destination-recommendation-copy strong {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.destination-recommendation-copy small {
+  color: #91a2ae;
+  font-size: 0.62rem;
+}
+
+.destination-recommendation-arrow {
+  margin-left: auto;
+  color: #62bdd3;
+}
+
+.destination-recommendations-note {
+  margin: 12px 0 0;
+  color: #8196a4;
+  font-size: 0.6rem;
+}
+
+.destination-recommendations-compact {
+  margin: 16px 0;
+  padding: 14px 0;
+  border-block: 1px solid rgba(130, 168, 190, 0.12);
+}
+
+.destination-recommendations-compact .destination-recommendations-heading .eyebrow {
+  margin-bottom: 10px;
+  font-size: 0.53rem;
+}
+
+.destination-recommendations-compact .destination-recommendation-grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.destination-recommendations-compact .destination-recommendation-card {
+  min-height: 58px;
+  padding: 10px 12px;
+}
+
+.destination-recommendations-compact .destination-recommendation-icon {
+  width: 29px;
+  height: 29px;
+  flex-basis: 29px;
+  font-size: 0.76rem;
+}
+
+.destination-recommendations-compact .destination-recommendation-copy strong {
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.destination-recommendations-compact .destination-recommendation-copy small {
+  font-size: 0.56rem;
+}
+
+.destination-recommendations-compact .destination-recommendations-note {
+  margin-top: 8px;
+  font-size: 0.55rem;
+  line-height: 1.5;
+}
+
 @media (max-width: 620px) {
   .stop-content {
     grid-template-columns: 1fr;
@@ -3345,4 +3557,485 @@ body {
 
   .photo-credits-details { padding: 14px; }
   .photo-credit-list { grid-template-columns: 1fr; }
+  .destination-recommendation-grid { grid-template-columns: 1fr; }
+  .route-day-planner { padding: 17px; }
+  .route-day-planner-heading { align-items: stretch; flex-direction: column; }
+  .route-day-start { max-width: 150px; }
+  .route-day-directions { margin-left: 0; }
+  .route-day-stop,
+  .route-day-meal-break {
+    grid-template-columns: 31px minmax(0, 1fr);
+    grid-template-areas: "number time" "number copy";
+    gap: 6px 11px;
+  }
+  .route-day-time { padding-top: 4px; }
+}
+
+.india-place-discovery {
+  margin: 20px 0 48px;
+  padding: 28px;
+  border: 1px solid rgba(130, 168, 190, 0.18);
+  background: #0d1b29;
+}
+
+.india-place-discovery-heading {
+  max-width: 760px;
+  margin-bottom: 22px;
+}
+
+.india-place-discovery-heading .eyebrow { margin-bottom: 8px; }
+
+.india-place-discovery-heading h2 {
+  margin: 0;
+  color: #e9f0f3;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 500;
+}
+
+.india-place-discovery-heading > p:last-child,
+.india-place-result > p:not(.eyebrow) {
+  color: #91a2ae;
+  font-size: 0.76rem;
+  line-height: 1.65;
+}
+
+.india-place-result-grid,
+.india-place-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.india-place-result,
+.india-place-photo {
+  min-width: 0;
+  border: 1px solid rgba(130, 168, 190, 0.18);
+  background: rgba(17, 29, 43, 0.78);
+}
+
+.india-place-result { padding: 18px; }
+.india-place-result .eyebrow { margin: 0 0 8px; }
+
+.india-place-result h3,
+.india-place-photo h4 {
+  margin: 0;
+  color: #dfe8ee;
+}
+
+.india-place-result h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.12rem;
+  font-weight: 500;
+}
+
+.india-place-result > p:not(.eyebrow) { margin: 10px 0 14px; }
+
+.india-place-result-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.india-place-result-links a,
+.india-place-map-fallback {
+  color: #62bdd3;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.india-place-result-links a:hover,
+.india-place-map-fallback:hover { color: #9ed9e9; }
+
+.india-place-photo-section { margin-top: 28px; }
+
+.india-place-photo-section > h3 {
+  margin: 0 0 14px;
+  color: #dfe8ee;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.12rem;
+  font-weight: 500;
+}
+
+.india-place-photo > a { display: block; }
+
+.india-place-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #102638;
+}
+
+.india-place-photo > div { padding: 13px 15px 15px; }
+.india-place-photo h4 { font-size: 0.78rem; line-height: 1.5; }
+
+.india-place-photo p {
+  margin: 6px 0 10px;
+  color: #91a2ae;
+  font-size: 0.63rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.india-place-map-fallback {
+  display: inline-block;
+  margin-top: 18px;
+}
+
+@media (max-width: 620px) {
+  .india-place-discovery { padding: 18px 14px; }
+  .india-place-result-grid,
+  .india-place-photo-grid { grid-template-columns: 1fr; }
+  .india-place-result { padding: 15px; }
+}
+
+.planner-intro { max-width: 820px; }
+
+.personal-planner {
+  margin: 24px 0 56px;
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid rgba(130, 168, 190, 0.18);
+  background: #0d1b29;
+}
+
+.personal-planner-heading { max-width: 760px; }
+.personal-planner-heading .eyebrow { margin-bottom: 8px; }
+
+.personal-planner-heading h2,
+.personal-plan-title h2 {
+  margin: 0;
+  color: #e9f0f3;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 500;
+}
+
+.personal-planner-heading > p:last-child,
+.personal-plan-title > div > p:last-child {
+  margin: 8px 0 0;
+  color: #91a2ae;
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.personal-planner-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.planner-field {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: #b7c5ce;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.planner-field input,
+.planner-field select {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 11px;
+  border: 1px solid rgba(130, 168, 190, 0.24);
+  border-radius: 3px;
+  background: #111e2d;
+  color: #dfe8ee;
+  font: inherit;
+}
+
+.planner-interest-field {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.planner-interest-field legend {
+  margin-bottom: 11px;
+  color: #b7c5ce;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.planner-interest-field legend span {
+  color: #8196a4;
+  font-weight: 400;
+}
+
+.planner-interest-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.planner-interest-chip {
+  min-height: 37px;
+  padding: 8px 12px;
+  border: 1px solid rgba(130, 168, 190, 0.24);
+  border-radius: 2px;
+  background: rgba(17, 29, 43, 0.8);
+  color: #b7c5ce;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.65rem;
+}
+
+.planner-interest-chip:hover,
+.planner-interest-chip.is-selected {
+  border-color: #62bdd3;
+  background: rgba(35, 83, 103, 0.3);
+  color: #dff7fc;
+}
+
+.planner-meal-toggle {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 9px;
+  color: #b7c5ce;
+  font-size: 0.68rem;
+}
+
+.planner-meal-toggle input { accent-color: #62bdd3; }
+.planner-submit { justify-self: start; min-height: 42px; }
+.planner-submit:disabled { cursor: not-allowed; opacity: 0.55; }
+
+.planner-custom-place {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.planner-add-place {
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid rgba(98, 189, 211, 0.45);
+  border-radius: 2px;
+  background: rgba(35, 83, 103, 0.3);
+  color: #dff7fc;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.68rem;
+}
+
+.planner-add-place:hover { background: rgba(35, 83, 103, 0.55); }
+
+.planner-custom-place-hint {
+  color: #8196a4;
+  font-size: 0.61rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.planner-custom-place-error {
+  grid-column: 1 / -1;
+  margin: -8px 0 0;
+  color: #f0a3a3;
+  font-size: 0.68rem;
+}
+
+.planner-custom-place-list {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: -7px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.planner-custom-place-list li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 8px;
+  border: 1px solid rgba(130, 168, 190, 0.24);
+  color: #c6d3db;
+  font-size: 0.65rem;
+}
+
+.planner-custom-place-list button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #62bdd3;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.personal-plan-results {
+  margin-top: 34px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(130, 168, 190, 0.18);
+}
+
+.personal-plan-title {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.personal-plan-title .eyebrow { margin: 0 0 8px; }
+.personal-plan-title h2 { font-size: clamp(1.3rem, 2.7vw, 1.75rem); }
+.personal-plan-title > .route-day-directions { flex-shrink: 0; }
+
+.personal-plan-alternatives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.personal-plan-alternatives button {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(130, 168, 190, 0.2);
+  background: rgba(17, 29, 43, 0.8);
+  color: #b7c5ce;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.67rem;
+  text-align: left;
+}
+
+.personal-plan-alternatives button span {
+  color: #8196a4;
+  font-size: 0.58rem;
+}
+
+.personal-plan-alternatives button:hover,
+.personal-plan-alternatives button.is-selected {
+  border-color: #62bdd3;
+  color: #e9f0f3;
+}
+
+.personal-plan-disclaimer {
+  margin: 18px 0 0;
+  padding: 11px 13px;
+  border: 1px solid rgba(208, 183, 120, 0.2);
+  background: rgba(208, 183, 120, 0.06);
+  color: #c6b98f;
+  font-size: 0.64rem;
+  line-height: 1.6;
+}
+
+.personal-plan-schedule {
+  display: grid;
+  margin: 17px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.personal-plan-event {
+  display: grid;
+  grid-template-columns: 118px 34px minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(130, 168, 190, 0.12);
+}
+
+.personal-plan-time {
+  padding-top: 4px;
+  color: #b7c5ce;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.personal-plan-marker {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid rgba(208, 183, 120, 0.38);
+  border-radius: 50%;
+  color: #d0b778;
+  font-size: 0.58rem;
+  font-weight: 700;
+}
+
+.personal-plan-event-transfer .personal-plan-marker {
+  border-color: rgba(130, 168, 190, 0.24);
+  color: #8196a4;
+}
+
+.personal-plan-event-independent .personal-plan-marker {
+  border-color: rgba(98, 189, 211, 0.48);
+  color: #82d3e6;
+}
+
+.personal-plan-event-meal { background: rgba(208, 183, 120, 0.045); }
+.personal-plan-event-meal .personal-plan-marker { background: rgba(208, 183, 120, 0.12); }
+
+.personal-plan-event h3 {
+  margin: 0;
+  color: #e9f0f3;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+.personal-plan-event p {
+  margin: 5px 0 0;
+  color: #91a2ae;
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
+.personal-plan-event a,
+.personal-plan-tour-link a {
+  display: inline-block;
+  margin-top: 7px;
+  color: #62bdd3;
+  font-size: 0.64rem;
+  text-underline-offset: 3px;
+}
+
+.personal-plan-tour-link {
+  margin-top: 15px;
+  padding-top: 17px;
+  border-top: 1px solid rgba(130, 168, 190, 0.18);
+}
+
+.personal-plan-tour-link p {
+  margin: 0;
+  color: #91a2ae;
+  font-size: 0.68rem;
+}
+
+@media (max-width: 760px) {
+  .personal-planner-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .personal-plan-title { align-items: flex-start; flex-direction: column; }
+  .personal-plan-title > .route-day-directions { margin-left: 0; }
+}
+
+@media (max-width: 620px) {
+  .personal-planner-form { grid-template-columns: 1fr; }
+  .planner-interest-field,
+  .planner-meal-toggle,
+  .planner-custom-place,
+  .planner-custom-place-error,
+  .planner-custom-place-list { grid-column: 1; }
+  .planner-custom-place { grid-template-columns: 1fr; }
+  .planner-add-place { justify-self: start; }
+  .personal-plan-event {
+    grid-template-columns: minmax(0, 1fr) 30px;
+    grid-template-areas: "time marker" "copy copy";
+    gap: 7px 10px;
+  }
+  .personal-plan-time { grid-area: time; }
+  .personal-plan-marker { grid-area: marker; }
+  .personal-plan-event > div { grid-area: copy; }
 }
